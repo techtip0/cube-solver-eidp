@@ -34,7 +34,7 @@ AccelStepper blau(motorInterfaceType, blaustepPin, blaudirPin);
 AccelStepper gelb(motorInterfaceType, gelbstepPin, gelbdirPin);
 
 
-// 90-Grad drehungen aller Seiten in beide richungen als Funktionen definieren
+// 90-Grad drehungen aller Seiten in beide Richungen als Funktionen definieren
 //D bedeutet im Uhrzeigersinn
 //DD bedeutet gegen den Uhrzeigersinn
 void D() {
@@ -97,6 +97,67 @@ void RR() {
   blau.runToPosition();
 }
 
+void Verdrehen()
+{
+//string wird von Rasberry Pi empfangen
+
+// Definiere String
+String strVerdreh = "DDFLB"; //emfangerner String 
+
+// Länge des Strings mit einem Extraplatz damit beim Erstellen eien 0 ans Ende gesetzt wird 
+int str_lenVerdreh = strVerdreh.length() + 1; 
+
+// Array für Buchstaben erstellen
+char char_arrayVerdreh[str_lenVerdreh];
+
+// Kopieren des Stings ins array
+strVerdreh.toCharArray(char_arrayVerdreh, str_lenVerdreh);
+
+//Laufvariable erstellen
+int i = 0;
+
+//Durchgegehn aller Buchstaben im array und bewergen des entsprechden Motors
+//Ende des Arrays hat eine 0 und ist Abbruchbedingung
+while (char_arrayVerdreh[i]!=0)
+{
+
+if (char_arrayVerdreh[i] == 'D')
+{
+  D();
+}
+
+else if (char_arrayVerdreh[i] == 'U')
+{
+  U();
+}
+
+else if (char_arrayVerdreh[i] == 'L')
+{
+  L();
+}
+
+else if (char_arrayVerdreh[i] == 'B')
+{
+  B();
+}
+
+else if (char_arrayVerdreh[i] == 'F')
+{
+  F();
+}
+
+else if (char_arrayVerdreh[i] == 'R')
+{
+  R();
+}
+
+i++;
+
+}
+
+
+}
+
 
 void setup() {
 	// Festsetzen der Maximalgeschwinigkeit und Beschleunigungsfaktoren der Motoren
@@ -132,60 +193,11 @@ void setup() {
 }
 
 
-//string wird von Rasberry Pi empfangen
 
-// Definiere
-String str = //emfangerner String 
 
-// Lämge des Strings mit einem extraplatz für die 0 definieren 
-int str_len = str.length() + 1; 
 
-// Array für Buchstaben erstellen
-char char_array[str_len];
-
-// Kopieren des Stings ins array
-str.toCharArray(char_array, str_len);
-
-//Durchgegehn aller Buchstaben im array und bewergen des entsprechden Motors 
 void loop ()
 {
-int i = 0;
 
-if (serial.print(char_array[i])= D)
-{
-  D();
-}
-
-else if (serial.print(char_array[i])= U)
-{
-  U();
-}
-
-else if (serial.print(char_array[i])= L)
-{
-  L();
-}
-
-else if (serial.print(char_array[i])= B)
-{
-  B();
-}
-
-else if (serial.print(char_array[i])= F)
-{
-  F();
-}
-
-else if (serial.print(char_array[i])= R)
-{
-  R();
-}
-
-else if (serial.print(char_array[i])= 0)
-{
-  exit(0)
-}
-
-i++;
 
 };
