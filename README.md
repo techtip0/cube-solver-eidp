@@ -1,4 +1,4 @@
-# cube-solver-eidp
+# Cube Solver EidP2 
 
 
-test das ist readme
+Das Repo für den einzig wahren Roboter zum lösen eines Rubiks Cubes
