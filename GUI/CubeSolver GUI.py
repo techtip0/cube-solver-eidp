@@ -2,7 +2,7 @@ import PySimpleGUI as psg
 import serial
 
 
-ser = serial.Serial(port="/dev/ttyAM0", baudrate=9600, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE, bytesize=serial.EIGHTBITS, timeout=1)
+ser = serial.Serial(port="/dev/ttyAMA0", baudrate=9600, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE, bytesize=serial.EIGHTBITS, timeout=1)
 
 psg.theme('Dark Grey 15')
 ergebnis = ''
@@ -36,9 +36,9 @@ while True:
         break
     
     if event == 'Start!':
-        ser.write(ergebnis)
+        ser.write(ergebnis.encode())
         testser = ser.readline()
-        ergebnis = 'Ich haben erhalten: ' + testser
+        ergebnis = 'Ich haben erhalten: ' + testser.decode()
     if event in (None, 'Exit'):
         break
     window['Ergebnis'].update(ergebnis)
