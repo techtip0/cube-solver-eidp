@@ -1,4 +1,9 @@
 import PySimpleGUI as psg
+import serial
+
+
+ser = serial.Serial(port="/dev/ttyAM0", baudrate=9600, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE, bytesize=serial.EIGHTBITS, timeout=1)
+
 psg.theme('Dark Grey 15')
 ergebnis = ''
 layout = [
@@ -30,6 +35,10 @@ while True:
     if event == 'Not-Aus':
         break
     
+    if event == 'Start!':
+        ser.write(ergebnis)
+        testser = ser.readline()
+        ergebnis = 'Ich haben erhalten: ' + testser
     if event in (None, 'Exit'):
         break
     window['Ergebnis'].update(ergebnis)
