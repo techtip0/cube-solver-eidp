@@ -1,13 +1,16 @@
 //AccelStepper Library inculdieren
 #include <AccelStepper.h>
 
+#define RXD2 16
+#define TXD2 17
+
 // Defnieren der Motoren-Pinne
 
 const int gruendirPin = 14;
 const int gruenstepPin = 27;
 
-const int weissdirPin = 5;
-const int weissstepPin = 17;
+const int weissdirPin = 18;
+const int weissstepPin = 5;
 
 const int rotdirPin = 13;
 const int rotstepPin = 12;
@@ -77,7 +80,7 @@ void BB() {
   rot.runToPosition();
 }
 
-void F() {
+void FFFF() {
   orange.move(800);
   orange.runToPosition();
 }
@@ -97,71 +100,68 @@ void RR() {
   blau.runToPosition();
 }
 
+
+String RPiEmpfangen(){
+  while (Serial2.available() == 0){}
+  String received = Serial2.readString();
+  received.trim();
+  return received;
+}
+
+
+
+
 void Verdrehen()
 {
-//string wird von Rasberry Pi empfangen
+  //string wird von Rasberry Pi empfangen
 
-// Definiere String
-String strVerdreh = "DDFLB"; //emfangerner String 
 
-// Länge des Strings mit einem Extraplatz damit beim Erstellen eien 0 ans Ende gesetzt wird 
-int str_lenVerdreh = strVerdreh.length() + 1; 
+  // Definiere String
+  String strVerdreh = RPiEmpfangen();
 
-// Array für Buchstaben erstellen
-char char_arrayVerdreh[str_lenVerdreh];
 
-// Kopieren des Stings ins array
-strVerdreh.toCharArray(char_arrayVerdreh, str_lenVerdreh);
+  for(int i = 0; i <= strVerdreh.length(); i++){
+    if (strVerdreh[i] == 'D')
+    {
+      D();
+    }
 
-//Laufvariable erstellen
-int i = 0;
+    else if (strVerdreh[i] == 'U')
+    {
+      U();
+    }
 
-//Durchgegehn aller Buchstaben im array und bewergen des entsprechden Motors
-//Ende des Arrays hat eine 0 und ist Abbruchbedingung
-while (char_arrayVerdreh[i]!=0)
-{
+    else if (strVerdreh[i] == 'L')
+    {
+      L();
+    }
 
-if (char_arrayVerdreh[i] == 'D')
-{
-  D();
+    else if (strVerdreh[i] == 'B')
+    {
+      B();
+    }
+
+    else if (strVerdreh[i] == 'F')
+    {
+      FFFF();
+    }
+
+    else if (strVerdreh[i] == 'R')
+    {
+      R();
+    }  
+  }
+  strVerdreh = "";
 }
 
-else if (char_arrayVerdreh[i] == 'U')
-{
-  U();
-}
-
-else if (char_arrayVerdreh[i] == 'L')
-{
-  L();
-}
-
-else if (char_arrayVerdreh[i] == 'B')
-{
-  B();
-}
-
-else if (char_arrayVerdreh[i] == 'F')
-{
-  F();
-}
-
-else if (char_arrayVerdreh[i] == 'R')
-{
-  R();
-}
-
-i++;
-
-}
-
-
-}
 
 
 void setup() {
 	// Festsetzen der Maximalgeschwinigkeit und Beschleunigungsfaktoren der Motoren
 	// initial speed and the target position
+  Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2);
+
+
 	gruen.setMaxSpeed(20000);
 	gruen.setAcceleration(10000);
 	gruen.setSpeed(20000);
@@ -194,10 +194,7 @@ void setup() {
 
 
 
-
-
 void loop ()
 {
-
-
+  Verdrehen();
 };
