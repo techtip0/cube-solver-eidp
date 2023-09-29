@@ -40,7 +40,7 @@ while True:
     
     if event == 'Start!':
         ser.write(ergebnis.encode())
-        time.sleep(2)
+        time.sleep(0.5)
         testser = ser.readline()
         empfangen = testser.decode()
     if event in (None, 'Exit'):
