@@ -40,12 +40,12 @@ AccelStepper gelb(motorInterfaceType, gelbstepPin, gelbdirPin);
 // 90-Grad drehungen aller Seiten in beide Richungen als Funktionen definieren
 //D bedeutet im Uhrzeigersinn
 //DD bedeutet gegen den Uhrzeigersinn
-void D() {
+void DD() {
   weiss.move(800);
   weiss.runToPosition();
 }
 
-void DD() {
+void D() {
   weiss.move(-800);
   weiss.runToPosition();
 }
@@ -60,42 +60,42 @@ void UU() {
   gelb.runToPosition();
 }
 
-void L() {
+void LL() {
   gruen.move(800);
   gruen.runToPosition();
 }
 
-void LL() {
+void L() {
   gruen.move(-800);
   gruen.runToPosition();
 }
 
-void B() {
+void BB() {
   rot.move(800);
   rot.runToPosition();
 }
 
-void BB() {
+void B() {
   rot.move(-800);
   rot.runToPosition();
 }
 
-void FFFF() {
+void FF() {
   orange.move(800);
   orange.runToPosition();
 }
 
-void FF() {
+void FFFF() {
   orange.move(-800);
   orange.runToPosition();
 }
 
-void R() {
+void RR() {
   blau.move(800);
   blau.runToPosition();
 }
 
-void RR() {
+void R() {
   blau.move(-800);
   blau.runToPosition();
 }
