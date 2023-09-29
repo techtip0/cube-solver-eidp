@@ -1,5 +1,6 @@
 import PySimpleGUI as psg
 import serial
+import time
 
 
 ser = serial.Serial(port="/dev/ttyAMA0", baudrate=9600, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE, bytesize=serial.EIGHTBITS, timeout=1)
@@ -39,7 +40,8 @@ while True:
     
     if event == 'Start!':
         ser.write(ergebnis.encode())
-        testser = ser.read()
+        time.sleep(2)
+        testser = ser.readline()
         empfangen = testser.decode()
     if event in (None, 'Exit'):
         break

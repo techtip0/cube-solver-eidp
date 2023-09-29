@@ -10,6 +10,8 @@ void loop() {
   while (Serial2.available() == 0){}
   String received = Serial2.readString();
   received.trim();
+  received = received + "\n";
   Serial2.print("Ich hab erhalten: " + received);
+  received = "";
 
 }
