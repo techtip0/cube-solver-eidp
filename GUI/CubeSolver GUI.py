@@ -37,7 +37,7 @@ while True:
     
     if event == 'Start!':
         ser.write(ergebnis.encode())
-        testser = ser.readline()
+        testser = ser.read()
         ergebnis = 'Ich haben erhalten: ' + testser.decode()
     if event in (None, 'Exit'):
         break
