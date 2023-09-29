@@ -1,7 +1,10 @@
 //AccelStepper Library inculdieren
 #include <AccelStepper.h>
+#include <Wire.h>
 
-#define RXD2 16
+
+//Pins für serielle Verbindung definieren
+#define RXD2 16 
 #define TXD2 17
 
 // Defnieren der Motoren-Pinne
@@ -119,7 +122,7 @@ void Verdrehen()
   // Definiere String
   String strVerdreh = RPiEmpfangen();
 
-
+  //String durchgehen und drehen
   for(int i = 0; i <= strVerdreh.length(); i++){
     if (strVerdreh[i] == 'D')
     {
@@ -157,11 +160,13 @@ void Verdrehen()
 
 
 void setup() {
+
+  //Serielle und I2C Verbindung öffnen
+  Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2);
+  Wire.begin();
+
 	// Festsetzen der Maximalgeschwinigkeit und Beschleunigungsfaktoren der Motoren
 	// initial speed and the target position
-  Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2);
-
-
 	gruen.setMaxSpeed(20000);
 	gruen.setAcceleration(10000);
 	gruen.setSpeed(20000);
