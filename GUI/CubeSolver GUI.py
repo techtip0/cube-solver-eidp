@@ -6,6 +6,7 @@ ser = serial.Serial(port="/dev/ttyAMA0", baudrate=9600, parity=serial.PARITY_NON
 
 psg.theme('Dark Grey 15')
 ergebnis = ''
+empfangen = ''
 layout = [
     [psg.Text(text='Zu auszuführende Verdrehung:',font=('Arial Bold', 18),size=30,expand_x=True,justification='center'), psg.Button("i", font= 'courier')],
     [psg.Text(key ='Ergebnis', expand_x=True,size=30, justification="left", font=('Arial Bold', 15),background_color='black')],
