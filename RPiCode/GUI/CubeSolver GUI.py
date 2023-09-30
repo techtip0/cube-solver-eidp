@@ -81,7 +81,7 @@ while True:
 
         if layout == 3:
             time.sleep(1)
-            ser.flush()
+            
 
             while (ser.in_waiting == 0):
                  i=0
