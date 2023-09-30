@@ -85,12 +85,14 @@ while True:
 
             while (ser.in_waiting == 0):
                  i=0
-            ScanErgebnis = ser.readline()
+            temp = ser.readline()
+            ScanErgebnis = temp.decode()
             event, values = window.read()
             if event == psg.WIN_CLOSED:
                 break
             if event == "TestSer":
-                ScanErgebnis = ser.readline()
+                temp = serial.readline()
+                ScanErgebnis = temp.decode()
             #if event == "Lösen starten!":
             #    window[f'-COL{layout}-'].update(visible=False)
             #    if layout < 5:
