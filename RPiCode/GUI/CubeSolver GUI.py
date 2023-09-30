@@ -91,7 +91,7 @@ while True:
             if event == psg.WIN_CLOSED:
                 break
             if event == "TestSer":
-                temp = serial.readline()
+                temp = ser.readline()
                 ScanErgebnis = temp.decode()
             #if event == "Lösen starten!":
             #    window[f'-COL{layout}-'].update(visible=False)
