@@ -83,27 +83,27 @@ while True:
             time.sleep(1)
             ser.flush()
 
-            while True:
-                while (ser.in_waiting == 0):
-                    i=0
+            while (ser.in_waiting == 0):
+                 i=0
+            ScanErgebnis = ser.readline()
+            event, values = window.read()
+            if event == psg.WIN_CLOSED:
+                break
+            if event == "TestSer":
                 ScanErgebnis = ser.readline()
-                event, values = window.read()
-                if event == psg.WIN_CLOSED:
-                    break
-                if event == "TestSer":
-                    ScanErgebnis = ser.readline()
-                #if event == "Lösen starten!":
-                #    window[f'-COL{layout}-'].update(visible=False)
-                #    if layout < 5:
-                #        layout +=1
-                #        window[f'-COL{layout}-'].update(visible=True)  
-                window['ScanBox'].update(ScanErgebnis)                  
+            #if event == "Lösen starten!":
+            #    window[f'-COL{layout}-'].update(visible=False)
+            #    if layout < 5:
+            #        layout +=1
+            #        window[f'-COL{layout}-'].update(visible=True)  
+                              
                     
                     
         
     if event in (None, 'Exit'):
         break
     window['Ergebnis'].update(ergebnis)
+    window['ScanBox'].update(ScanErgebnis)
     
     
 window.close()
