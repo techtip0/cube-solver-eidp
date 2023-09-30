@@ -449,6 +449,7 @@ void R1() {
 
 String RPiEmpfangen(){
   while (Serial2.available() == 0){}
+  warten(1000);
   String received = Serial2.readString();
   received.trim();
   return received;

@@ -88,13 +88,14 @@ while True:
                 #    window[f'-COL{layout}-'].update(visible=False)
                 #    if layout < 5:
                 #        layout +=1
-                #        window[f'-COL{layout}-'].update(visible=True)                    
+                #        window[f'-COL{layout}-'].update(visible=True)  
+                window['ScanBox'].update(ScanErgebnis)                  
                     
                     
         
     if event in (None, 'Exit'):
         break
     window['Ergebnis'].update(ergebnis)
-    window['ScanBox'].update(ScanErgebnis)
+    
     
 window.close()
