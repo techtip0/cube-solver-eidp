@@ -41,64 +41,82 @@ AccelStepper gelb(motorInterfaceType, gelbstepPin, gelbdirPin);
 
 
 // 90-Grad drehungen aller Seiten in beide Richungen als Funktionen definieren
-//D bedeutet im Uhrzeigersinn
-//DD bedeutet gegen den Uhrzeigersinn
-void DD() {
+//D1 bedeutet einmal im Uhrzeigersinn, D2 zweimal
+//D3 einmal rückwärts
+void D3() {
   weiss.move(800);
   weiss.runToPosition();
 }
-
-void D() {
+void D2() {
+  weiss.move(1600);
+  weiss.runToPosition();
+}
+void D1() {
   weiss.move(-800);
   weiss.runToPosition();
 }
 
-void U() {
+void U1() {
   gelb.move(800);
   gelb.runToPosition();
 }
-
-void UU() {
+void U2() {
+  gelb.move(1600);
+  gelb.runToPosition();
+}
+void U3() {
   gelb.move(-800);
   gelb.runToPosition();
 }
 
-void LL() {
+void L3() {
   gruen.move(800);
   gruen.runToPosition();
 }
-
-void L() {
+void L2() {
+  gruen.move(1600);
+  gruen.runToPosition();
+}
+void L1() {
   gruen.move(-800);
   gruen.runToPosition();
 }
 
-void BB() {
+void B3() {
   rot.move(800);
   rot.runToPosition();
 }
-
-void B() {
+void B2() {
+  rot.move(1600);
+  rot.runToPosition();
+}
+void B1() {
   rot.move(-800);
   rot.runToPosition();
 }
 
-void FF() {
+void F3() {
   orange.move(800);
   orange.runToPosition();
 }
-
-void FFFF() {
+void F2() {
+  orange.move(1600);
+  orange.runToPosition();
+}
+void F1() {
   orange.move(-800);
   orange.runToPosition();
 }
 
-void RR() {
+void R3() {
   blau.move(800);
   blau.runToPosition();
 }
-
-void R() {
+void R2() {
+  blau.move(1600);
+  blau.runToPosition();
+}
+void R1() {
   blau.move(-800);
   blau.runToPosition();
 }
@@ -126,32 +144,32 @@ void Verdrehen()
   for(int i = 0; i <= strVerdreh.length(); i++){
     if (strVerdreh[i] == 'D')
     {
-      D();
+      D1();
     }
 
     else if (strVerdreh[i] == 'U')
     {
-      U();
+      U1();
     }
 
     else if (strVerdreh[i] == 'L')
     {
-      L();
+      L1();
     }
 
     else if (strVerdreh[i] == 'B')
     {
-      B();
+      B1();
     }
 
     else if (strVerdreh[i] == 'F')
     {
-      FFFF();
+      F1();
     }
 
     else if (strVerdreh[i] == 'R')
     {
-      R();
+      R1();
     }  
   }
   strVerdreh = "";

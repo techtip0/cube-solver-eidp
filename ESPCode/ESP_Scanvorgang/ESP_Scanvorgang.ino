@@ -37,65 +37,93 @@ AccelStepper blau(motorInterfaceType, blaustepPin, blaudirPin);
 AccelStepper gelb(motorInterfaceType, gelbstepPin, gelbdirPin);
 
 
+//Funktion zum warten via Millis(), da delay() ESP32 blockiert
+void warten(long intervall){
+  unsigned long currentMillis = millis();
+  unsigned long previousMillis = millis();
+  while(currentMillis - previousMillis < intervall){
+    currentMillis = millis();
+  }
+}
+
+
 // 90-Grad drehungen aller Seiten in beide Richungen als Funktionen definieren
 //D bedeutet im Uhrzeigersinn
 //DD bedeutet gegen den Uhrzeigersinn
-void DD() {
+void D3() {
   weiss.move(800);
   weiss.runToPosition();
 }
-
-void D() {
+void D2() {
+  weiss.move(1600);
+  weiss.runToPosition();
+}
+void D1() {
   weiss.move(-800);
   weiss.runToPosition();
 }
 
-void U() {
+void U1() {
   gelb.move(800);
   gelb.runToPosition();
 }
-
-void UU() {
+void U2() {
+  gelb.move(1600);
+  gelb.runToPosition();
+}
+void U3() {
   gelb.move(-800);
   gelb.runToPosition();
 }
 
-void LL() {
+void L3() {
   gruen.move(800);
   gruen.runToPosition();
 }
-
-void L() {
+void L2() {
+  gruen.move(1600);
+  gruen.runToPosition();
+}
+void L1() {
   gruen.move(-800);
   gruen.runToPosition();
 }
 
-void BB() {
+void B3() {
   rot.move(800);
   rot.runToPosition();
 }
-
-void B() {
+void B2() {
+  rot.move(1600);
+  rot.runToPosition();
+}
+void B1() {
   rot.move(-800);
   rot.runToPosition();
 }
 
-void FF() {
+void F3() {
   orange.move(800);
   orange.runToPosition();
 }
-
-void FFFF() {
+void F2() {
+  orange.move(1600);
+  orange.runToPosition();
+}
+void F1() {
   orange.move(-800);
   orange.runToPosition();
 }
 
-void RR() {
+void R3() {
   blau.move(800);
   blau.runToPosition();
 }
-
-void R() {
+void R2() {
+  blau.move(1600);
+  blau.runToPosition();
+}
+void R1() {
   blau.move(-800);
   blau.runToPosition();
 }
@@ -103,205 +131,233 @@ void R() {
 void Scan()
 {
 
-string CubeDefinitionString = "XXXXUXXXXXXXXRXXXXXXXXFXXXXXXXXDXXXXXXXXLXXXXXXXXBXXXX";   //Erstellen eines Cube Strings im Richtigen Format; dieser wird als Input für den Lösealgorythmus genutzt
-                                                                                          //X als Platzhalter für eingelsenen Werte
+  String CubeDefinitionString = "XXXXUXXXXXXXXRXXXXXXXXFXXXXXXXXDXXXXXXXXLXXXXXXXXBXXXX";   //Erstellen eines Cube Strings im Richtigen Format; dieser wird als Input für den Lösealgorythmus genutzt
+                                                                                            //X als Platzhalter für eingelsenen Werte
 
-CubeDefinitionString.setCharAt(5, 'ScanKante');        //Austauschen der Platzhalter an den richtigen Stellen im String gegen die eingescannten Werte
-CubeDefinitionString.setCharAt(0, 'ScanEcke');         //Das Austauschen und das Drehen erfolgt nach einer vorher festgelegten Sequenz und Prositionen
+  CubeDefinitionString.setCharAt(5, KanteScan());        //Austauschen der Platzhalter an den richtigen Stellen im String gegen die eingescannten Werte
+  warten(1000);                                           //Kurzer Delay, um Multiplexer und Farbsensor Zeit zu geben
+  CubeDefinitionString.setCharAt(0, EckeScan());         //Das Austauschen und das Drehen erfolgt nach einer vorher festgelegten Sequenz und Prositionen
 
-U();                                                  //Drehen des Würfels damit alle Sticker eingescannt werden
+  U1();                                                 //Drehen des Würfels damit alle Sticker eingescannt werden
+  warten(1000);
 
-CubeDefinitionString.setCharAt(1, 'ScanKante');
-CubeDefinitionString.setCharAt(6, 'ScanEcke');
+  CubeDefinitionString.setCharAt(1, KanteScan());
+  warten(1000);
+  CubeDefinitionString.setCharAt(6, EckeScan());
 
-U();
+  U1();
+  warten(1000);
 
-CubeDefinitionString.setCharAt(3, 'ScanKante');
-CubeDefinitionString.setCharAt(8, 'ScanEcke');
+  CubeDefinitionString.setCharAt(3, KanteScan());
+  warten(1000);
+  CubeDefinitionString.setCharAt(8, EckeScan());
 
-U();
+  U1();
+  warten(1000);
 
-CubeDefinitionString.setCharAt(7, 'ScanKante');
-CubeDefinitionString.setCharAt(2, 'ScanEcke');
+  CubeDefinitionString.setCharAt(7, KanteScan());
+  warten(1000);
+  CubeDefinitionString.setCharAt(2, EckeScan());
 
-U();
-R();
-LL();
+  U1();
+  R1();
+  L3();
+  warten(1000);
 
-CubeDefinitionString.setCharAt(23, 'ScanKante');
-CubeDefinitionString.setCharAt(18, 'ScanEcke');
+  CubeDefinitionString.setCharAt(23, KanteScan());
+  warten(1000);
+  CubeDefinitionString.setCharAt(18, EckeScan());
 
-U();
-U();
+  U2();
+  warten(1000);
 
-CubeDefinitionString.setCharAt(21, 'ScanKante');
-CubeDefinitionString.setCharAt(26, 'ScanEcke');
+  CubeDefinitionString.setCharAt(21, KanteScan());
+  warten(1000);
+  CubeDefinitionString.setCharAt(26, EckeScan());
 
-U();
-U();
-RR();
-L();
-FFFF();
-R();
-LL();
+  U2();
+  R3();
+  L1();
+  F1();
+  R1();
+  L3();
+  warten(1000);
 
-CubeDefinitionString.setCharAt(19, 'ScanKante');
-CubeDefinitionString.setCharAt(24, 'ScanEcke');
+  CubeDefinitionString.setCharAt(19, KanteScan());
+  warten(1000);
+  CubeDefinitionString.setCharAt(24, EckeScan());
 
-U();
-U();
+  U2();
+  warten(1000);
 
-CubeDefinitionString.setCharAt(25, 'ScanKante');
-CubeDefinitionString.setCharAt(20, 'ScanEcke');
+  CubeDefinitionString.setCharAt(25, KanteScan());
+  warten(1000);
+  CubeDefinitionString.setCharAt(20, EckeScan());
 
-U();
-U();
-RR();
-L(),
-FF();
-R();
-R();
-L();
-L();
+  U2();
+  R3();
+  L1();
+  F3();
+  R2();
+  L2();
+  warten(1000);
 
-CubeDefinitionString.setCharAt(32, 'ScanKante');
-CubeDefinitionString.setCharAt(27, 'ScanEcke');
+  CubeDefinitionString.setCharAt(32, KanteScan());
+  warten(1000);
+  CubeDefinitionString.setCharAt(27, EckeScan());
 
-U();
-U();
+  U2();
+  warten(1000);
 
-CubeDefinitionString.setCharAt(30, 'ScanKante');
-CubeDefinitionString.setCharAt(35, 'ScanEcke');
+  CubeDefinitionString.setCharAt(30, KanteScan());
+  warten(1000);
+  CubeDefinitionString.setCharAt(35, EckeScan());
 
-U();
-U();
-R();
-R();
-L();
-L();
-D();
-R();
-R();
-L();
-L();
+  U2();
+  R1();
+  L2();
+  D1();
+  R2();
+  L2();
+  warten(1000);
 
-CubeDefinitionString.setCharAt(28, 'ScanKante');
-CubeDefinitionString.setCharAt(33, 'ScanEcke');
+  CubeDefinitionString.setCharAt(28, KanteScan());
+  warten(1000);
+  CubeDefinitionString.setCharAt(33, EckeScan());
 
-U();
-U();
+  U2();
+  warten(1000);
 
-CubeDefinitionString.setCharAt(34, 'ScanKante');
-CubeDefinitionString.setCharAt(29, 'ScanEcke');
+  CubeDefinitionString.setCharAt(34, KanteScan());
+  warten(1000);
+  CubeDefinitionString.setCharAt(29, EckeScan());
 
-U();
-U();
-R();
-R();
-L();
-L();
-DD();
-RR();
-L();
+  U2();
+  R2();
+  L2();
+  D3();
+  R3();
+  L1();
+  warten(1000);
 
-CubeDefinitionString.setCharAt(48, 'ScanKante');
-CubeDefinitionString.setCharAt(53, 'ScanEcke');
+  CubeDefinitionString.setCharAt(48, KanteScan());
+  warten(1000);
+  CubeDefinitionString.setCharAt(53, EckeScan());
 
-U();
-U();
+  U2();
+  warten(1000);
 
-CubeDefinitionString.setCharAt(50, 'ScanKante');
-CubeDefinitionString.setCharAt(45, 'ScanEcke');
+  CubeDefinitionString.setCharAt(50, KanteScan());
+  warten(1000);
+  CubeDefinitionString.setCharAt(45, EckeScan());
 
-U();
-U();
-R();
-LL();
-B();
-RR();
-L();
+  U2();
+  R1();
+  L3();
+  B1();
+  R3();
+  L1();
+  warten(1000);
 
-CubeDefinitionString.setCharAt(52, 'ScanKante');
-CubeDefinitionString.setCharAt(47, 'ScanEcke');
+  CubeDefinitionString.setCharAt(52, KanteScan());
+  warten(1000);
+  CubeDefinitionString.setCharAt(47, EckeScan());
 
-U();
-U();
+  U2();
+  warten(1000);
 
-CubeDefinitionString.setCharAt(46, 'ScanKante');
-CubeDefinitionString.setCharAt(51, 'ScanEcke');
+  CubeDefinitionString.setCharAt(46, KanteScan());
+  warten(1000);
+  CubeDefinitionString.setCharAt(51, EckeScan());
 
-U();
-U();
-R();
-LL();
-BB();
-BB();
-FFFF();
-U();
+  U2();
+  R1();
+  L3();
+  B3();
+  B3();
+  F1();
+  U1();
+  warten(1000);
 
-CubeDefinitionString.setCharAt(39, 'ScanKante');
-CubeDefinitionString.setCharAt(44, 'ScanEcke');
+  CubeDefinitionString.setCharAt(39, KanteScan());
+  warten(1000);
+  CubeDefinitionString.setCharAt(44, EckeScan());
 
-U();
-U();
+  U2();
+  warten(1000);
 
-CubeDefinitionString.setCharAt(41, 'ScanKante');
-CubeDefinitionString.setCharAt(36, 'ScanEcke');
+  CubeDefinitionString.setCharAt(41, KanteScan());
+  warten(1000);
+  CubeDefinitionString.setCharAt(36, EckeScan());
 
-U();
-FF();
-B();
-L();
-FFFF();
-BB();
-U();
+  U1();
+  F3();
+  B1();
+  L1();
+  F1();
+  B3();
+  U1();
+  warten(1000);
 
-CubeDefinitionString.setCharAt(43, 'ScanKante');
-CubeDefinitionString.setCharAt(38, 'ScanEcke');
+  CubeDefinitionString.setCharAt(43, KanteScan());
+  warten(1000);
+  CubeDefinitionString.setCharAt(38, EckeScan());
 
-U();
-U();
+  U2();
+  warten(1000);
 
-CubeDefinitionString.setCharAt(37, 'ScanKante');
-CubeDefinitionString.setCharAt(42, 'ScanEcke');
+  CubeDefinitionString.setCharAt(37, KanteScan());
+  warten(1000);
+  CubeDefinitionString.setCharAt(42, EckeScan());
 
-U();
-FF();
-B();
-LL();
-FF();
-B();
-U();
+  U1();
+  F3();
+  B1();
+  L3();
+  F3();
+  B1();
+  U1();
+  warten(1000);
 
-CubeDefinitionString.setCharAt(14, 'ScanKante');
-CubeDefinitionString.setCharAt(9, 'ScanEcke');
+  CubeDefinitionString.setCharAt(14, KanteScan());
+  warten(1000);
+  CubeDefinitionString.setCharAt(9, EckeScan());
 
-U();
-U();
+  U2();
+  warten(1000);
 
-CubeDefinitionString.setCharAt(12, 'ScanKante');
-CubeDefinitionString.setCharAt(17, 'ScanEcke');
+  CubeDefinitionString.setCharAt(12, KanteScan());
+  warten(1000);
+  CubeDefinitionString.setCharAt(17, EckeScan());
 
-U();
-FFFF();
-BB();
-R();
-FF();
-B();
-U();
+  U1();
+  F1();
+  B3();
+  R1();
+  F3();
+  B1();
+  U1();
+  warten(1000);
 
-CubeDefinitionString.setCharAt(10, 'ScanKante');
-CubeDefinitionString.setCharAt(24, 'ScanEcke');
+  CubeDefinitionString.setCharAt(10, KanteScan());
+  warten(1000);
+  CubeDefinitionString.setCharAt(15, EckeScan());
 
-U();
-U();
+  U2();
+  warten(1000);
 
-CubeDefinitionString.setCharAt(16, 'ScanKante');
-CubeDefinitionString.setCharAt(11, 'ScanEcke');
+  CubeDefinitionString.setCharAt(16, KanteScan());
+  CubeDefinitionString.setCharAt(11, EckeScan());
 
-U();
-FFFF();
-BB();
-RR();
+  U1();
+  F1();
+  B3();
+  R3();
+
+  Serial2.write(CubeDefinitionString + "\n");
+
+
+
+
 
 }

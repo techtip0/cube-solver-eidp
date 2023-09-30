@@ -7,7 +7,7 @@ ser = serial.Serial(port="/dev/ttyAMA0", baudrate=9600, parity=serial.PARITY_NON
 
 psg.theme('Dark Grey 15')
 ergebnis = ''
-empfangen = ''
+ScanErgebnis = ''
 
 #Layouts erstellen für die GUI
 layout1 = [
@@ -18,7 +18,8 @@ layout1 = [
 
 
 layout2 = [[psg.Text(text='Verdrehung beendet. Scannen starten:',font=('Arial Bold', 18),size=30,expand_x=True,justification='center')],
-[psg.Button("Go!")]
+           [psg.Text(key = 'ScanBox', expand_x=True, size=30, justification= "left", background_color='black')],
+           [psg.Button("Go!")]
 ]
 
 #layouts zusammenfügen
@@ -54,7 +55,7 @@ while True:
         while (ser.in_waiting() == 0):      #Warten auf Bereit Signal des ESP32
             #Schleife kann nicht leer sein
             i = 0
-        
+        ScanErgebnis = ser.readline()
         #nächstes Layout laden und altes entfernen    
         window[f'-COL{layout}-'].update(visible=False)
         if layout < 5:
@@ -71,4 +72,6 @@ while True:
     if event in (None, 'Exit'):
         break
     window['Ergebnis'].update(ergebnis)
+    window['Scanbox'].update(ScanErgebnis)
+    
 window.close()
