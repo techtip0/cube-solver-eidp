@@ -27,8 +27,8 @@ layout3 = [
     ]
 
 #layouts zusammenfügen
-layout = [[psg.Column(layout1, key='-COL1-'), psg.Column(layout2, visible=False, key='-COL2-')], psg.Column(layout3, visible=False, key ='-COL3-')]
-
+layout = [[psg.Column(layout1, key='-COL1-'), psg.Column(layout2, visible=False, key='-COL2-'), psg.Column(layout3, visible=False, key ='-COL3-')]
+]
 #GUI Fenster initialisieren
 window = psg.Window('Cube Solver EidP v1', layout, size=(715,150), icon=r'Rubiks_cube.ico')
 #GUI Schleife für Aktionen
