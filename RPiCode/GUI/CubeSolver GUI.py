@@ -95,6 +95,6 @@ while True:
     if event in (None, 'Exit'):
         break
     window['Ergebnis'].update(ergebnis)
-    window['Scanbox'].update(ScanErgebnis)
+    window['ScanBox'].update(ScanErgebnis)
     
 window.close()
