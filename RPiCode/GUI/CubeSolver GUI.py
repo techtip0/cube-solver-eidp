@@ -22,7 +22,9 @@ layout2 = [[psg.Text(text='Verdrehung beendet. Scannen starten:',font=('Arial Bo
            [psg.Button("Go!")]
 ]
 
-layout3 = [[psg.Text("Scannen...", key = 'ScanBox', expand_x=True, size=30, justification= "left", background_color='black')]]
+layout3 = [[psg.Text("Scannen...", key = 'ScanBox', expand_x=True, size=30, justification= "left", background_color='black')],
+           [psg.Button("TestSer")],
+           ]
 
 #layouts zusammenfügen
 layout = [[psg.Column(layout1, key='-COL1-'), psg.Column(layout2, visible=False, key='-COL2-'), psg.Column(layout3, visible=False, key ='-COL3-')]]
@@ -88,6 +90,8 @@ while True:
                 event, values = window.read()
                 if event == psg.WIN_CLOSED:
                     break
+                if event == "TestSer":
+                    ScanErgebnis = ser.readline()
                 #if event == "Lösen starten!":
                 #    window[f'-COL{layout}-'].update(visible=False)
                 #    if layout < 5:
