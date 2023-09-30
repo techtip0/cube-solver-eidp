@@ -56,7 +56,7 @@ while True:
     if event == 'Start!':
         ser.write(ergebnis.encode())
         time.sleep(0.5)
-        while (ser.in_waiting() == 0):      #Warten auf Bereit Signal des ESP32
+        while (ser.in_waiting == 0):      #Warten auf Bereit Signal des ESP32
             #Schleife kann nicht leer sein
             i = 0
         
@@ -76,7 +76,7 @@ while True:
                 if layout < 5:
                     layout += 1
                     window[f'-COL{layout}-'].update(visible=True)
-                    while (ser.in_waiting() == 0):
+                    while (ser.in_waiting == 0):
                         i=0
                     ScanErgebnis = ser.readline()
         if layout == 3:
