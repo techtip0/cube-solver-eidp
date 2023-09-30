@@ -323,7 +323,7 @@ void Scan()
   U1();
   F1();
   B3();
-  R3();
+  //R3();
 
   Serial2.print(CubeDefinitionString + "\n");
 
