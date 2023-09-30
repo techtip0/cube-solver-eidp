@@ -4,6 +4,9 @@
 #define RXD2 16
 #define TXD2 17
 
+char KanteScan();
+char EckeScan();
+
 // Defnieren der Motoren-Pinne
 
 const int gruendirPin = 14;
@@ -97,7 +100,7 @@ void B2() {
   rot.move(1600);
   rot.runToPosition();
 }
-void B1() {
+void Bone() {
   rot.move(-800);
   rot.runToPosition();
 }
@@ -254,7 +257,7 @@ void Scan()
   U2();
   R1();
   L3();
-  B1();
+  Bone();
   R3();
   L1();
   warten(1000);
@@ -292,7 +295,7 @@ void Scan()
 
   U1();
   F3();
-  B1();
+  Bone();
   L1();
   F1();
   B3();
@@ -312,10 +315,10 @@ void Scan()
 
   U1();
   F3();
-  B1();
+  Bone();
   L3();
   F3();
-  B1();
+  Bone();
   U1();
   warten(1000);
 
@@ -335,7 +338,7 @@ void Scan()
   B3();
   R1();
   F3();
-  B1();
+  Bone();
   U1();
   warten(1000);
 
@@ -354,10 +357,15 @@ void Scan()
   B3();
   R3();
 
-  Serial2.write(CubeDefinitionString + "\n");
+  Serial2.print(CubeDefinitionString + "\n");
 
 
+}
 
+void setup(){
 
+}
+
+void loop(){
 
 }

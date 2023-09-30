@@ -12,6 +12,8 @@ void PCA9548A(uint8_t bus){
   Wire.endTransmission();
 }
 
+
+//Funktionen zum Scannen der Farben an den einzelnen Sensoren
 char KanteScan(){
   uint16_t r, g, b, c;
   char ErgebnisKante;

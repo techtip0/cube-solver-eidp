@@ -7,7 +7,7 @@ ser = serial.Serial(port="/dev/ttyAMA0", baudrate=9600, parity=serial.PARITY_NON
 
 psg.theme('Dark Grey 15')
 ergebnis = ''
-ScanErgebnis = ''
+ScanErgebnis = 'Scannen...'
 
 #Layouts erstellen für die GUI
 layout1 = [
@@ -18,12 +18,16 @@ layout1 = [
 
 
 layout2 = [[psg.Text(text='Verdrehung beendet. Scannen starten:',font=('Arial Bold', 18),size=30,expand_x=True,justification='center')],
-           [psg.Text(key = 'ScanBox', expand_x=True, size=30, justification= "left", background_color='black')],
+           
            [psg.Button("Go!")]
 ]
 
+layout3 = [
+    [psg.Text(key = 'ScanBox', expand_x=True, size=30, justification= "left", background_color='black')],
+    ]
+
 #layouts zusammenfügen
-layout = [[psg.Column(layout1, key='-COL1-'), psg.Column(layout2, visible=False, key='-COL2-')]]
+layout = [[psg.Column(layout1, key='-COL1-'), psg.Column(layout2, visible=False, key='-COL2-')], psg.Column(layout3, visible=False, key ='-COL3-')]
 
 #GUI Fenster initialisieren
 window = psg.Window('Cube Solver EidP v1', layout, size=(715,150), icon=r'Rubiks_cube.ico')
@@ -55,7 +59,7 @@ while True:
         while (ser.in_waiting() == 0):      #Warten auf Bereit Signal des ESP32
             #Schleife kann nicht leer sein
             i = 0
-        ScanErgebnis = ser.readline()
+        
         #nächstes Layout laden und altes entfernen    
         window[f'-COL{layout}-'].update(visible=False)
         if layout < 5:
@@ -68,6 +72,25 @@ while True:
             if event == "Go!":
                 bereit = 'GO'
                 ser.write(bereit.encode())      #ESP32 scannen lassen
+                window[f'-COL{layout}-'].update(visible=False)
+                if layout < 5:
+                    layout += 1
+                    window[f'-COL{layout}-'].update(visible=True)
+                    while (ser.in_waiting() == 0):
+                        i=0
+                    ScanErgebnis = ser.readline()
+        if layout == 3:
+            while True:
+                event, values = window.read()
+                if event == psg.WIN_CLOSED:
+                    break
+                #if event == "Lösen starten!":
+                #    window[f'-COL{layout}-'].update(visible=False)
+                #    if layout < 5:
+                #        layout +=1
+                #        window[f'-COL{layout}-'].update(visible=True)                    
+                    
+                    
         
     if event in (None, 'Exit'):
         break
