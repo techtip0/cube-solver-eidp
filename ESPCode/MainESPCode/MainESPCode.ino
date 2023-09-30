@@ -548,7 +548,9 @@ void loop ()
 {
   Verdrehen();
   String weiter = RPiEmpfangen();
-  while (weiter != "GO"){}
+  while (weiter != "GO"){
+    weiter = RPiEmpfangen();
+  }
   weiter = "";
   Scan();
 };

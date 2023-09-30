@@ -22,16 +22,16 @@ layout2 = [[psg.Text(text='Verdrehung beendet. Scannen starten:',font=('Arial Bo
            [psg.Button("Go!")]
 ]
 
-layout3 = [
-    [psg.Text(key = 'ScanBox', expand_x=True, size=30, justification= "left", background_color='black')],
-    ]
+layout3 = [[psg.Text(key = 'ScanBox', expand_x=True, size=30, justification= "left", background_color='black')]]
 
 #layouts zusammenfügen
-layout = [[psg.Column(layout1, key='-COL1-'), psg.Column(layout2, visible=False, key='-COL2-'), psg.Column(layout3, visible=False, key ='-COL3-')]
-]
+layout = [[psg.Column(layout1, key='-COL1-'), psg.Column(layout2, visible=False, key='-COL2-'), psg.Column(layout3, visible=False, key ='-COL3-')]]
 #GUI Fenster initialisieren
 window = psg.Window('Cube Solver EidP v1', layout, size=(715,150), icon=r'Rubiks_cube.ico')
 #GUI Schleife für Aktionen
+
+layout = 1
+
 while True:
     event, values = window.read()
     if event =="F":
