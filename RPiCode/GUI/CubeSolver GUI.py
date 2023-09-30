@@ -80,10 +80,11 @@ while True:
         if layout == 3:
             time.sleep(1)
             ser.flush()
-            while (ser.in_waiting == 0):
-                i=0
-            ScanErgebnis = ser.readline()
+
             while True:
+                while (ser.in_waiting == 0):
+                    i=0
+                ScanErgebnis = ser.readline()
                 event, values = window.read()
                 if event == psg.WIN_CLOSED:
                     break
