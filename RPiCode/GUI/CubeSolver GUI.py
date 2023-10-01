@@ -84,8 +84,8 @@ while True:
 
         if layout == 3:
             event, values = window.read()
-            ser.flushInput()
-            ser.flushOutput()
+            ser.reset_input_buffer()
+            ser.reset_output_buffer()
             time.sleep(1)
             print("NACH FLUSH")
             

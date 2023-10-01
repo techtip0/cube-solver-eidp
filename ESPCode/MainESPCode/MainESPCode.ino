@@ -185,7 +185,7 @@ void Scan()
   CubeDefinitionString.setCharAt(35, EckeScan());
 
   U2();
-  R1();
+  R2();
   L2();
   D1();
   R2();
