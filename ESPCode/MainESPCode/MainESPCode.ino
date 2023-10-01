@@ -325,9 +325,9 @@ void Scan()
   B3();
   R3();
   CubeDefinitionString = CubeDefinitionString + "\n";
-  warten(1000);
+  
   Serial2.print(CubeDefinitionString);
-
+  warten(10000);
 
 }
 
@@ -558,5 +558,6 @@ void loop ()
     weiter = RPiEmpfangen();
   }
   weiter = "";
+  Serial2.flush()
   Scan();
 };

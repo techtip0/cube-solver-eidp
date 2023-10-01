@@ -84,12 +84,14 @@ while True:
             ser.flushInput()
             ser.flushOutput()
             time.sleep(1)
+            t = 1
             
-
-            while (ser.in_waiting == 0):
-                 i=0
-            temp = ser.readline()
-            ScanErgebnis = temp.decode()
+            if t == 1:
+                while (ser.in_waiting == 0):
+                    i=0
+                temp = ser.readline()
+                ScanErgebnis = temp.decode()
+                t = 2
             
             if event == psg.WIN_CLOSED:
                 break
