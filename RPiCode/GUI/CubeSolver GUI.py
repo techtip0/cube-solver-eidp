@@ -80,6 +80,7 @@ while True:
                     window[f'-COL{layout}-'].update(visible=True)
 
         if layout == 3:
+            event, values = window.read()
             ser.flushInput()
             ser.flushOutput()
             time.sleep(1)
@@ -89,7 +90,7 @@ while True:
                  i=0
             temp = ser.readline()
             ScanErgebnis = temp.decode()
-            event, values = window.read()
+            
             if event == psg.WIN_CLOSED:
                 break
             if event == "TestSer":
