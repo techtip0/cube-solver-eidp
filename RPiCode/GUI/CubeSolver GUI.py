@@ -2,6 +2,9 @@ import PySimpleGUI as psg
 import serial
 import time
 
+
+t=1
+
 #Serielle Verbindung öffnen
 ser = serial.Serial(port="/dev/ttyAMA0", baudrate=9600, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE, bytesize=serial.EIGHTBITS, timeout=1)
 
@@ -84,7 +87,7 @@ while True:
             ser.flushInput()
             ser.flushOutput()
             time.sleep(1)
-            t = 1
+            
             
             if t == 1:
                 while (ser.in_waiting == 0):

@@ -558,6 +558,6 @@ void loop ()
     weiter = RPiEmpfangen();
   }
   weiter = "";
-  Serial2.flush()
+  Serial2.flush();
   Scan();
 };
