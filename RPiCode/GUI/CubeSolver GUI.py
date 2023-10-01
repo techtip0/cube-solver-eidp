@@ -70,45 +70,45 @@ while True:
         if layout < 5:
             layout += 1
             window[f'-COL{layout}-'].update(visible=True)
-        if layout == 2:
-            event, values = window.read()
-            if event == psg.WIN_CLOSED:
-                break
-            if event == "Go!":
-                bereit = 'GO'
-                ser.write(bereit.encode())      #ESP32 scannen lassen
-                window[f'-COL{layout}-'].update(visible=False)
-                if layout < 5:
-                    layout += 1
-                    window[f'-COL{layout}-'].update(visible=True)
+    if layout == 2:
+        event, values = window.read()
+        if event == psg.WIN_CLOSED:
+            break
+        if event == "Go!":
+            bereit = 'GO'
+            ser.write(bereit.encode())      #ESP32 scannen lassen
+            window[f'-COL{layout}-'].update(visible=False)
+            if layout < 5:
+                layout += 1
+                window[f'-COL{layout}-'].update(visible=True)
 
-        if layout == 3:
-            event, values = window.read()
-            ser.reset_input_buffer()
-            ser.reset_output_buffer()
-            time.sleep(1)
-            print("NACH FLUSH")
+    if layout == 3:
+        event, values = window.read()
+        ser.reset_input_buffer()
+        ser.reset_output_buffer()
+        time.sleep(1)
+        print("NACH FLUSH")
             
-            if t == 1:
-                print("IN IF BED ANFANG")
-                while (ser.in_waiting == 0):
-                    i=0
-                temp = ser.readline()
-                ScanErgebnis = temp.decode()
-                t = 2
-                print("ENDE DER WAITING SCHLEIFE")
-            print("NACH IF BEDINGUNG")
-            if event == psg.WIN_CLOSED:
-                break
-            if event == "TestSer":
-                print("IN TEST SER BUTTON VOR SERIAL")
-                temp = ser.readline()
-                ScanErgebnis = temp.decode()
-            #if event == "Lösen starten!":
-            #    window[f'-COL{layout}-'].update(visible=False)
-            #    if layout < 5:
-            #        layout +=1
-            #        window[f'-COL{layout}-'].update(visible=True)  
+        if t == 1:
+            print("IN IF BED ANFANG")
+            while (ser.in_waiting == 0):
+                i=0
+            temp = ser.readline()
+            ScanErgebnis = temp.decode()
+            t = 2
+            print("ENDE DER WAITING SCHLEIFE")
+        print("NACH IF BEDINGUNG")
+        if event == psg.WIN_CLOSED:
+            break
+        if event == "TestSer":
+            print("IN TEST SER BUTTON VOR SERIAL")
+            temp = ser.readline()
+            ScanErgebnis = temp.decode()
+        #if event == "Lösen starten!":
+        #    window[f'-COL{layout}-'].update(visible=False)
+        #    if layout < 5:
+        #        layout +=1
+        #        window[f'-COL{layout}-'].update(visible=True)  
                               
                     
                     
