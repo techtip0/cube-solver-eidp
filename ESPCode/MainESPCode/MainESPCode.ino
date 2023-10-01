@@ -318,6 +318,7 @@ void Scan()
   warten(1000);
 
   CubeDefinitionString.setCharAt(16, KanteScan());
+  warten(1000);
   CubeDefinitionString.setCharAt(11, EckeScan());
 
   U1();
@@ -327,6 +328,7 @@ void Scan()
   CubeDefinitionString = CubeDefinitionString + "\n";
   
   Serial2.print(CubeDefinitionString);
+  Serial.print("CubeString versandt");
   warten(10000);
 
 }
@@ -513,6 +515,7 @@ void Verdrehen()
 void setup() {
 
   //Serielle und I2C Verbindung öffnen
+  Serial.begin(9600);
   Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2);
   Wire.begin();
 
@@ -560,4 +563,5 @@ void loop ()
   weiter = "";
   Serial2.flush();
   Scan();
+  Serial.print("Ende des Loops erreicht");
 };
