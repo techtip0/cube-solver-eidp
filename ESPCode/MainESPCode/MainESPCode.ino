@@ -501,6 +501,10 @@ void Verdrehen()
   strVerdreh = "";
 
   Serial2.print('Fertig');
+  warten(1000);
+  Serial2.flush();
+
+
 }
 
 

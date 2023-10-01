@@ -80,6 +80,8 @@ while True:
                     window[f'-COL{layout}-'].update(visible=True)
 
         if layout == 3:
+            ser.flushInput()
+            ser.flushOutput()
             time.sleep(1)
             
 
