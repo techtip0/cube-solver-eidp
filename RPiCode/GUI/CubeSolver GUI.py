@@ -87,18 +87,21 @@ while True:
             ser.flushInput()
             ser.flushOutput()
             time.sleep(1)
-            
+            print("NACH FLUSH")
             
             if t == 1:
+                print("IN IF BED ANFANG")
                 while (ser.in_waiting == 0):
                     i=0
                 temp = ser.readline()
                 ScanErgebnis = temp.decode()
                 t = 2
-            
+                print("ENDE DER WAITING SCHLEIFE")
+            print("NACH IF BEDINGUNG")
             if event == psg.WIN_CLOSED:
                 break
             if event == "TestSer":
+                print("IN TEST SER BUTTON VOR SERIAL")
                 temp = ser.readline()
                 ScanErgebnis = temp.decode()
             #if event == "Lösen starten!":
