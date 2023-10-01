@@ -22,7 +22,7 @@ layout2 = [[psg.Text(text='Verdrehung beendet. Scannen starten:',font=('Arial Bo
            [psg.Button("Go!")]
 ]
 
-layout3 = [[psg.Text("Scannen...", key = 'ScanBox', expand_x=True, size=30, justification= "left", background_color='black')],
+layout3 = [[psg.Text(key = 'ScanBox', expand_x=True, size=30, justification= "left", background_color='black')],
            [psg.Button("TestSer")],
            ]
 

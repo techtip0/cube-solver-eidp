@@ -324,8 +324,9 @@ void Scan()
   F1();
   B3();
   //R3();
+  CubeDefinitionString = CubeDefinitionString + "\n";
   warten(1000);
-  Serial2.println(CubeDefinitionString);
+  Serial2.print(CubeDefinitionString);
 
 
 }
