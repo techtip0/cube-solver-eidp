@@ -94,10 +94,12 @@ while True:
             while (ser.in_waiting == 0):
                 print("ICH BIN IN SCHLEIFE LESEN")
                 i=0
-            time.sleep(0.5)
+            #time.sleep(0.5)
             temp = ser.readline()
             ScanErgebnis = temp.decode()
             t = 2
+            ser.readline
+            print(temp)
             print(ScanErgebnis)
             print("ENDE DER WAITING SCHLEIFE")
         print("NACH IF BEDINGUNG")
