@@ -80,6 +80,7 @@ while True:
             if layout < 5:
                 layout += 1
                 window[f'-COL{layout}-'].update(visible=True)
+                event, values = window.read()
 
     if layout == 3:
         print("IN LAYOUT3 IF BEDINGUNG")
@@ -93,9 +94,11 @@ while True:
             while (ser.in_waiting == 0):
                 print("ICH BIN IN SCHLEIFE LESEN")
                 i=0
+            time.sleep(0.5)
             temp = ser.readline()
             ScanErgebnis = temp.decode()
             t = 2
+            print(ScanErgebnis)
             print("ENDE DER WAITING SCHLEIFE")
         print("NACH IF BEDINGUNG")
         if event == psg.WIN_CLOSED:
