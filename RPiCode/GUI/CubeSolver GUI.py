@@ -92,6 +92,7 @@ while True:
         if t == 1:
             print("IN IF BED ANFANG")
             while (ser.in_waiting == 0):
+                print("ICH BIN IN SCHLEIFE LESEN")
                 i=0
             temp = ser.readline()
             ScanErgebnis = temp.decode()
