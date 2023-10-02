@@ -80,7 +80,7 @@ while True:
             if layout < 5:
                 layout += 1
                 window[f'-COL{layout}-'].update(visible=True)
-                event, values = window.read()
+                #event, values = window.read()
 
     if layout == 3:
         print("IN LAYOUT3 IF BEDINGUNG")
