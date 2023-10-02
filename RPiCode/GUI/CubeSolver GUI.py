@@ -83,10 +83,10 @@ while True:
                 window[f'-COL{layout}-'].update(visible=True)
 
     if layout == 3:
+        print("IN LAYOUT3 IF BEDINGUNG")
         event, values = window.read()
         ser.reset_input_buffer()
         ser.reset_output_buffer()
-        time.sleep(1)
         print("NACH FLUSH")
             
         if t == 1:
