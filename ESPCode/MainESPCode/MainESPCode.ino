@@ -328,6 +328,7 @@ void Scan()
   CubeDefinitionString = CubeDefinitionString + "\n";
   
   Serial2.print(CubeDefinitionString);
+  Serial.print(CubeDefinitionString);
   Serial.print("CubeString versandt");
   warten(10000);
 
