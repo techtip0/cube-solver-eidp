@@ -131,97 +131,100 @@ while (CubeSolveString.length() > 0)
 void Loesen()
 {
 
-for (int i = 0; i <= StringCount; i++)
-{
+Speicherstrg*;
+StringCount*;
 
-if (SpeicherString[i] == 'D1')
-{
-  D1();
-}
+  for (int i = 0; i <= StringCount; i++)
+  {
 
-if (SpeicherString[i] == 'D2')
-{
-  D2();
-}
+    if (SpeicherString[i] == 'D1')
+    {
+      D1();
+    }
 
-if (SpeicherString[i] == 'D3')
-{
-  D3();
-}
+    else if (SpeicherString[i] == 'D2')
+    {
+      D2();
+    }
 
-if (SpeicherString[i] == 'U1')
-{
-  U1();
-}
+    else if (SpeicherString[i] == 'D3')
+    {
+      D3();
+    }
 
-if (SpeicherString[i] == 'U2')
-{
-  U2();
-}
+    else if (SpeicherString[i] == 'U1')
+    {
+      U1();
+    }
 
-if (SpeicherString[i] == 'U3')
-{
-  U3();
-}
+    else if (SpeicherString[i] == 'U2')
+    {
+      U2();
+    }
 
-if (SpeicherString[i] == 'L1')
-{
-  L1();
-}
+    else if (SpeicherString[i] == 'U3')
+    {
+      U3();
+    }
 
-if (SpeicherString[i] == 'L2')
-{
-  L2();
-}
+    else if (SpeicherString[i] == 'L1')
+    {
+      L1();
+    }
 
-if (SpeicherString[i] == 'L3')
-{
-  L3();
-}
+    else if (SpeicherString[i] == 'L2')
+    {
+      L2();
+    }
 
-if (SpeicherString[i] == 'B1')
-{
-  Bone();
-}
+    else if (SpeicherString[i] == 'L3')
+    {
+      L3();
+    }
 
-if (SpeicherString[i] == 'B2')
-{
-  B2();
-}
+    else if (SpeicherString[i] == 'B1')
+    {
+      Bone();
+    }
 
-if (SpeicherString[i] == 'B3')
-{
-  B3();
-}
+    else if (SpeicherString[i] == 'B2')
+    {
+      B2();
+    }
 
-if (SpeicherString[i] == 'F1')
-{
-  F1();
-}
+    else if (SpeicherString[i] == 'B3')
+    {
+      B3();
+    }
 
-if (SpeicherString[i] == 'F2')
-{
-  F2();
-}
+    else if (SpeicherString[i] == 'F1')
+    {
+      F1();
+    }
 
-if (SpeicherString[i] == 'F3')
-{
-  F3();
-}
+    else if (SpeicherString[i] == 'F2')
+    {
+      F2();
+    }
 
-if (SpeicherString[i] == 'R1')
-{
-  R1();
-}
+    else if (SpeicherString[i] == 'F3')
+    {
+      F3();
+    }
 
-if (SpeicherString[i] == 'R2')
-{
-  R2();
-}
+    else if (SpeicherString[i] == 'R1')
+    {
+      R1();
+    }
 
-if (SpeicherString[i] == 'R3')
-{
-  R3();
-}
+    else if (SpeicherString[i] == 'R2')
+    {
+      R2();
+    }
+
+    else if (SpeicherString[i] == 'R3')
+    {
+      R3();
+    }
 
 }
