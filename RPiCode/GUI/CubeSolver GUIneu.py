@@ -74,6 +74,9 @@ while True:
             if layout < 6:
                 layout += 1
                 window[f'-COL{layout}-'].update(visible=True)
+        
+        if event == 'i':
+            psg.popup("Hier würden schlaue Erklärungen stehen\ntest", title="Hilfe", icon=r'information.ico')
     
     
     if layout == 2:
