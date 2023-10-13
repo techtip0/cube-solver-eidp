@@ -14,28 +14,37 @@ ergebnis = ''
 ScanErgebnis = 'Scannen...'
 
 #Layouts erstellen für die GUI
+
 layout1 = [
+    [psg.Text("EidP CubeSolver", expand_x=True, size=20, justification='c', font=('Arial Bold', 20)), psg.Button("i", font= 'courier')],
+    [psg.Text("Bei erster Benutzung in neuer Umgebung bitte Farbsensoren kalibrieren", expand_x=True, size= 15, justification='c',font=('Arial', 10))],
+    [psg.Button("Kalibrieren", size= 20, justification='l', key ='calib'), psg.Button("Überspringen", size =20, justification='l', key='skip')]
+    ]
+
+
+
+layout2 = [
     [psg.Button("Reset"),psg.Text(text='Zu auszuführende Verdrehung:',font=('Arial Bold', 18),size=30,expand_x=True,justification='center'), psg.Button("i", font= 'courier')],
     [psg.Text(key ='Ergebnis', expand_x=True,size=30, justification="left", font=('Arial Bold', 15),background_color='black')],
     [psg.Button("Vorne (F)",key ='F'), psg.Button("Links (L)", key='L'), psg.Button("Rechts (R)", key ='R'), psg.Button("Unten (D)", key='D'), psg.Button("Hinten (B)", key='B'), psg.Button("Oben (U)", key='U'), psg.Button("Start!",expand_x=True, expand_y=True)],
 ]
 
 
-layout2 = [[psg.Text(text='Verdrehung beendet. Scannen starten:',font=('Arial Bold', 18),size=30,expand_x=True,justification='center')],
+layout3 = [[psg.Text(text='Verdrehung beendet. Scannen starten:',font=('Arial Bold', 18),size=30,expand_x=True,justification='center')],
            
            [psg.Button("Go!")]
 ]
 
-layout3 = [[psg.Text(key = 'ScanBox', expand_x=True, size=30, justification= "left", background_color='black')],
+layout4 = [[psg.Text(key = 'ScanBox', expand_x=True, size=30, justification= "left", background_color='black')],
            [psg.Button("Lösen!")],
            ]
 
-layout4 = [[psg.Text("Lösen...")],
+layout5 = [[psg.Text("Lösen...")],
            [psg.Button("Ende", key='Ende')]
            ]
 
 #layouts zusammenfügen
-layout = [[psg.Column(layout1, key='-COL1-'), psg.Column(layout2, visible=False, key='-COL2-'), psg.Column(layout3, visible=False, key ='-COL3-')]]
+layout = [[psg.Column(layout1, key='-COL1-'), psg.Column(layout2, visible=False, key='-COL2-'), psg.Column(layout3, visible=False, key ='-COL3-'), psg.Column(layout4, visible=False, key ='-COL4-'), psg.Column(layout5, visible=False, key ='-COL5-')]]
 #GUI Fenster initialisieren
 window = psg.Window('Cube Solver EidP v1', layout, size=(715,150), icon=r'Rubiks_cube.ico')
 #GUI Schleife für Aktionen
@@ -44,37 +53,62 @@ layout = 1
 
 while True:
     event, values = window.read()
-    if event =="F":
-        ergebnis = ergebnis + 'F'
-    if event =="L":
-        ergebnis = ergebnis + 'L'
-    if event =="R":
-        ergebnis = ergebnis + 'R'
-    if event =="D":
-        ergebnis = ergebnis + 'D'
-    if event =="U":
-        ergebnis = ergebnis + 'U'
-    if event =="B":
-        ergebnis = ergebnis + 'B'        
     
-    if event == 'i':
-        psg.popup("Hier würden schlaue Erklärungen stehen\ntest", title="Hilfe", icon=r'information.ico')
+    if layout == 1:
+        if event =="calib":
+            calib = "calib"
+            ser.write(calib.encode())
+            while (ser.in_waiting == 0):      #Warten auf Bereit Signal des ESP32
+                #Schleife kann nicht leer sein
+                i = 0
+            
+            #nächstes Layout laden und altes entfernen    
+            window[f'-COL{layout}-'].update(visible=False)
+            if layout < 6:
+                layout += 1
+                window[f'-COL{layout}-'].update(visible=True)
+        if event == "skip":
+            skip = "skip"
+            ser.write(skip.encode())
+            window[f'-COL{layout}-'].update(visible=False)
+            if layout < 6:
+                layout += 1
+                window[f'-COL{layout}-'].update(visible=True)
     
-    if event == 'Reset':
-        ergebnis = ''
     
-    if event == 'Start!':
-        ser.write(ergebnis.encode())
-        while (ser.in_waiting == 0):      #Warten auf Bereit Signal des ESP32
-            #Schleife kann nicht leer sein
-            i = 0
-        
-        #nächstes Layout laden und altes entfernen    
-        window[f'-COL{layout}-'].update(visible=False)
-        if layout < 5:
-            layout += 1
-            window[f'-COL{layout}-'].update(visible=True)
     if layout == 2:
+        
+        if event =="F":
+            ergebnis = ergebnis + 'F'
+        if event =="L":
+            ergebnis = ergebnis + 'L'
+        if event =="R":
+            ergebnis = ergebnis + 'R'
+        if event =="D":
+            ergebnis = ergebnis + 'D'
+        if event =="U":
+            ergebnis = ergebnis + 'U'
+        if event =="B":
+            ergebnis = ergebnis + 'B'        
+        
+        if event == 'i':
+            psg.popup("Hier würden schlaue Erklärungen stehen\ntest", title="Hilfe", icon=r'information.ico')
+        
+        if event == 'Reset':
+            ergebnis = ''
+        
+        if event == 'Start!':
+            ser.write(ergebnis.encode())
+            while (ser.in_waiting == 0):      #Warten auf Bereit Signal des ESP32
+                #Schleife kann nicht leer sein
+                i = 0
+            
+            #nächstes Layout laden und altes entfernen    
+            window[f'-COL{layout}-'].update(visible=False)
+            if layout < 6:
+                layout += 1
+                window[f'-COL{layout}-'].update(visible=True)
+    if layout == 3:
         #event, values = window.read()
         if event == psg.WIN_CLOSED:
             break
@@ -82,12 +116,12 @@ while True:
             bereit = 'GO'
             ser.write(bereit.encode())      #ESP32 scannen lassen
             window[f'-COL{layout}-'].update(visible=False)
-            if layout < 5:
+            if layout < 6:
                 layout += 1
                 window[f'-COL{layout}-'].update(visible=True)
                 #event, values = window.read()
 
-    if layout == 3:
+    if layout == 4:
         #print("IN LAYOUT3 IF BEDINGUNG")
         #event, values = window.read()
         ser.reset_input_buffer()
@@ -114,11 +148,11 @@ while True:
             solution = sv.solve(ScanErgebnis,19,2)
             ser.write(solution.encode())
             window[f'-COL{layout}-'].update(visible=False)
-            if layout < 5:
+            if layout < 6:
                 layout +=1
                 window[f'-COL{layout}-'].update(visible=True) 
     
-    if layout == 4:
+    if layout == 5:
         ser.reset_input_buffer()
         ser.reset_output_buffer()        
         while (ser.in_waiting == 0):
