@@ -83,6 +83,8 @@ while True:
                 window[f'-COL{layout}-'].update(visible=True)
 
     if layout == 3:
+        while True:
+            
         print("IN LAYOUT3 IF BEDINGUNG")
         event, values = window.read()
         ser.reset_input_buffer()

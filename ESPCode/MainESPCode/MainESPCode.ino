@@ -49,6 +49,7 @@ char KanteScan(){
   else if (r >= 220 && r <= 260 && g >= 480 && g <= 530 && b >= 490 && b <= 540) {
     char ErgebnisKante = 'R';
   }  
+  else ErgebnisKante = 'X';
   return ErgebnisKante;
 }  
 
@@ -83,6 +84,7 @@ char EckeScan(){
   else if (r >= 235 && r <= 300 && g >= 465 && g <= 540 && b >= 460 && b <= 500) {
     char ErgebnisEcke = 'R';     
   }
+  else ErgebnisEcke = 'X';
 
   return ErgebnisEcke;
 
@@ -330,7 +332,7 @@ void Scan()
   Serial2.print(CubeDefinitionString);
   Serial.print(CubeDefinitionString);
   Serial.print("CubeString versandt");
-  warten(10000);
+  //warten(10000);
 
 }
 
@@ -512,6 +514,125 @@ void Verdrehen()
 }
 
 
+String Loesen(String CubeSolveString) 
+{
+
+
+  String Speicherstrg[60];
+
+  int StringCount = 0;
+
+  //Aufteilen den CubeSolveStrings in substrings
+  while (CubeSolveString.length() > 0)
+    {
+      int index = CubeSolveString.indexOf(' ');
+      if (index == -1)  // Keine Leertaste gefunden
+      {
+        Speicherstrg[StringCount++] = CubeSolveString;
+        break;
+      }
+      else
+      {
+        Speicherstrg[StringCount++] = CubeSolveString.substring(0, index);
+        CubeSolveString = CubeSolveString.substring(index+1);
+      }
+    }
+    for (int i = 0; i <= StringCount; i++)
+  {
+
+    if (Speicherstrg[i] == "D1")
+    {
+      D1();
+    }
+
+    else if (Speicherstrg[i] == "D2")
+    {
+      D2();
+    }
+
+    else if (Speicherstrg[i] == "D3")
+    {
+      D3();
+    }
+
+    else if (Speicherstrg[i] == "U1")
+    {
+      U1();
+    }
+
+    else if (Speicherstrg[i] == "U2")
+    {
+      U2();
+    }
+
+    else if (Speicherstrg[i] == "U3")
+    {
+      U3();
+    }
+
+    else if (Speicherstrg[i] == "L1")
+    {
+      L1();
+    }
+
+    else if (Speicherstrg[i] == "L2")
+    {
+      L2();
+    }
+
+    else if (Speicherstrg[i] == "L3")
+    {
+      L3();
+    }
+
+    else if (Speicherstrg[i] == "B1")
+    {
+      Bone();
+    }
+
+    else if (Speicherstrg[i] == "B2")
+    {
+      B2();
+    }
+
+    else if (Speicherstrg[i] == "B3")
+    {
+      B3();
+    }
+
+    else if (Speicherstrg[i] == "F1")
+    {
+      F1();
+    }
+
+    else if (Speicherstrg[i] == "F2")
+    {
+      F2();
+    }
+
+    else if (Speicherstrg[i] == "F3")
+    {
+      F3();
+    }
+
+    else if (Speicherstrg[i] == "R1")
+    {
+      R1();
+    }
+
+    else if (Speicherstrg[i] == "R2")
+    {
+      R2();
+    }
+
+    else if (Speicherstrg[i] == "R3")
+    {
+      R3();
+    }
+  }
+  Serial2.println("Fertig gelöst!")
+}
+
 
 void setup() {
 
@@ -564,5 +685,8 @@ void loop ()
   weiter = "";
   Serial2.flush();
   Scan();
+  String CubeString = RPiEmpfangen();
+  Loesen(CubeString);
+
   Serial.print("Ende des Loops erreicht");
 };

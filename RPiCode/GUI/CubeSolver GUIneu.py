@@ -1,6 +1,7 @@
 import PySimpleGUI as psg
 import serial
-import time
+import twophase.solver as sv
+
 
 
 t=1
@@ -26,7 +27,11 @@ layout2 = [[psg.Text(text='Verdrehung beendet. Scannen starten:',font=('Arial Bo
 ]
 
 layout3 = [[psg.Text(key = 'ScanBox', expand_x=True, size=30, justification= "left", background_color='black')],
-           [psg.Button("TestSer")],
+           [psg.Button("Lösen!")],
+           ]
+
+layout4 = [[psg.Text("Lösen...")],
+           [psg.Button("Ende", key='Ende')]
            ]
 
 #layouts zusammenfügen
@@ -83,37 +88,46 @@ while True:
                 #event, values = window.read()
 
     if layout == 3:
-        print("IN LAYOUT3 IF BEDINGUNG")
+        #print("IN LAYOUT3 IF BEDINGUNG")
         #event, values = window.read()
         ser.reset_input_buffer()
         ser.reset_output_buffer()
-        print("NACH FLUSH")
+        #print("NACH FLUSH")
             
         if t == 1:
-            print("IN IF BED ANFANG")
+            #print("IN IF BED ANFANG")
             while (ser.in_waiting == 0):
-                print("ICH BIN IN SCHLEIFE LESEN")
+                #print("ICH BIN IN SCHLEIFE LESEN")
                 i=0
             #time.sleep(0.5)
             temp = ser.readline()
             ScanErgebnis = temp.decode()
             t = 2
-            ser.readline
-            print(temp)
-            print(ScanErgebnis)
-            print("ENDE DER WAITING SCHLEIFE")
-        print("NACH IF BEDINGUNG")
+            #ser.readline
+            #print(temp)
+            #print(ScanErgebnis)
+            #print("ENDE DER WAITING SCHLEIFE")
+        #print("NACH IF BEDINGUNG")
         if event == psg.WIN_CLOSED:
             break
-        if event == "TestSer":
-            print("IN TEST SER BUTTON VOR SERIAL")
-            temp = ser.readline()
-            ScanErgebnis = temp.decode()
-        #if event == "Lösen starten!":
-        #    window[f'-COL{layout}-'].update(visible=False)
-        #    if layout < 5:
-        #        layout +=1
-        #        window[f'-COL{layout}-'].update(visible=True)  
+        if event == "Lösen!":
+            solution = sv.solve(ScanErgebnis,19,2)
+            ser.write(solution.encode())
+            window[f'-COL{layout}-'].update(visible=False)
+            if layout < 5:
+                layout +=1
+                window[f'-COL{layout}-'].update(visible=True) 
+    
+    if layout == 4:
+        ser.reset_input_buffer()
+        ser.reset_output_buffer()        
+        while (ser.in_waiting == 0):
+            i=0
+        window['Ende'].update("Feddig")
+            
+        if event == "Ende":
+            break
+        
                               
                     
                     
@@ -122,6 +136,7 @@ while True:
         break
     window['Ergebnis'].update(ergebnis)
     window['ScanBox'].update(ScanErgebnis)
+    
     
     
 window.close()

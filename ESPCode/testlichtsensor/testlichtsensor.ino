@@ -31,6 +31,14 @@ void PCA9548A(uint8_t bus){
 
 
 
+
+
+
+int SAMPLES[][4];
+
+
+
+
 void setup() {
   Serial.begin(9600);
 
@@ -198,8 +206,6 @@ void loop() {
     Serial.println(" ");      
   }
     
-
-
 
 
 
