@@ -19,76 +19,267 @@ void PCA9548A(uint8_t bus){
   Wire.endTransmission();
 }
 
-//Funktionen zum Scannen der Farben an den einzelnen Sensoren
-char KanteScan(){
-  uint16_t r, g, b, c;
-  char ErgebnisKante;
+
+
+int SamplesKante[6][5] = {
+  { 0,  0,  0,  0,  1},
+  { 0,  0,  0,  0,  2},
+  { 0,  0,  0,  0,  3},
+  { 0,  0,  0,  0,  4},
+  { 0,  0,  0,  0,  5},
+  { 0,  0,  0,  0,  6},
+};
+
+int SamplesEcke[6][5] = {
+  { 0,  0,  0,  0,  1},
+  { 0,  0,  0,  0,  2},
+  { 0,  0,  0,  0,  3},
+  { 0,  0,  0,  0,  4},
+  { 0,  0,  0,  0,  5},
+  { 0,  0,  0,  0,  6},
+};
+
+void Kalibrieren(int (*SamplesKante)[6][5], int (*SamplesEcke)[6][5]) 
+{
+
+
+
+  U2();
+  warten(1000);
+  uint16_t gelbR1, gelbG1, gelbB1, gelbC1;
+
   PCA9548A(0);
-  tcsKante.getRawData(&r, &g, &b, &c);
-  //gelb
-  if (r >= 530 && r <= 580 && g >= 890 && g <= 940 && b >= 540 && b <= 600) {
-    char ErgebnisKante = 'U';
-  }
-  //grün
-  else if (r >= 280 && r <= 330 && g >= 690 && g <= 740 && b >= 490 && b <= 540) {
-    char ErgebnisKante = 'L';
-  }
-  //orange
-  else if (r >= 600 && r <= 650 && g >= 490 && g <= 550 && b >= 450 && b <= 500) {
-    char ErgebnisKante = 'F';
-  }
-  //rot
-  else if (r >= 285 && r <= 330 && g >= 465 && g <= 510 && b >= 420 && b <= 460) {
-   char ErgebnisKante = 'B';
-  }
-  //weiß
-  else if (r >= 470 && r <= 520 && g >= 830 && g <= 900 && b >= 760 && b <= 800) {
-   char ErgebnisKante = 'D';
-  }
-  //blau
-  else if (r >= 220 && r <= 260 && g >= 480 && g <= 530 && b >= 490 && b <= 540) {
-    char ErgebnisKante = 'R';
-  }  
-  else ErgebnisKante = 'X';
-  return ErgebnisKante;
-}  
+  tcsKante.getRawData(&gelbR1, &gelbG1, &gelbB1, &gelbC1);
 
-char EckeScan(){
-  uint16_t r, g, b, c;
-  char ErgebnisEcke;
+  warten(1000);
+  uint16_t EgelbR1, EgelbG1, EgelbB1, EgelbC1;
   PCA9548A(1);
+  tcsEcke.getRawData(&EgelbR1, &EgelbG1, &EgelbB1, &EgelbC1);
 
-  tcsEcke.getRawData(&r, &g, &b, &c);
-  //gelb
-  if (r >= 530 && r <= 590 && g >= 820 && g <= 890 && b >= 500 && b <= 550) {
-    char ErgebnisEcke = 'U';
-    
-  }
-  //grün
-  else if (r >= 290 && r <= 350 && g >= 655 && g <= 720 && b >= 465 && b <= 500) {
-    char ErgebnisEcke = 'L';    
-  }
-  //orange
-  else if (r >= 630 && r <= 685 && g >= 480 && g <= 510 && b >= 430 && b <= 460) {
-    char ErgebnisEcke = 'F';  
-  }
-  //rot
-  else if (r >= 300 && r <= 375 && g >= 430 && g <= 515 && b >= 390 && b <= 440) {
-    char ErgebnisEcke = 'B';    
-  }
-  //weiß
-  else if (r >= 470 && r <= 515 && g >= 760 && g <= 815 && b >= 680 && b <= 735) {
-    char ErgebnisEcke = 'D';
-  }
-  //blau
-  else if (r >= 235 && r <= 300 && g >= 465 && g <= 540 && b >= 460 && b <= 500) {
-    char ErgebnisEcke = 'R';     
-  }
-  else ErgebnisEcke = 'X';
+  U1();
 
-  return ErgebnisEcke;
+  uint16_t gelbR2, gelbG2, gelbB2, gelbC2;
+  PCA9548A(0);
+  tcsKante.getRawData(&gelbR2, &gelbG2, &gelbB2, &gelbC2);
+
+  warten(1000);
+  uint16_t EgelbR2, EgelbG2, EgelbB2, EgelbC2;
+  PCA9548A(1);
+  tcsEcke.getRawData(&EgelbR2, &EgelbG2, &EgelbB2, &EgelbC2);
+
+  *SamplesKante[0][0]= (gelbR1 + gelbR2) / 2;
+  *SamplesKante[0][1]= (gelbG1 + gelbG2) / 2;
+  *SamplesKante[0][2]= (gelbB1 + gelbB2) / 2;
+  *SamplesKante[0][3]= (gelbC1 + gelbC2) / 2;
+
+  *SamplesEcke[0][0]= (EgelbR1 + EgelbR2) / 2;
+  *SamplesEcke[0][1]= (EgelbG1 + EgelbG2) / 2;
+  *SamplesEcke[0][2]= (EgelbB1 + EgelbB2) / 2;
+  *SamplesEcke[0][3]= (EgelbC1 + EgelbC2) / 2;  
+
+
+
+  U1();
+  F3();
+  Bone();
+  U1();
+  warten(1000);
+
+  uint16_t blauR1, blauG1, blauB1, blauC1;
+  PCA9548A(0);
+  tcsKante.getRawData(&blauR1, &blauG1, &blauB1, &blauC1);
+  warten(1000);
+
+  uint16_t EblauR1, EblauG1, EblauB1, EblauC1;
+  PCA9548A(1);
+  tcsEcke.getRawData(&EblauR1, &EblauG1, &EblauB1, &EblauC1);
+
+
+  B2();
+
+  uint16_t blauR2, blauG2, blauB2, blauC2;
+  PCA9548A(0);
+  tcsKante.getRawData(&blauR2, &blauG2, &blauB2, &blauC2);
+
+  uint16_t EblauR2, EblauG2, EblauB2, EblauC2;
+  PCA9548A(1);
+  tcsEcke.getRawData(&EblauR2, &EblauG2, &EblauB2, &EblauC2);
+
+  *SamplesKante[1][0]= (blauR1 + blauR2) / 2;
+  *SamplesKante[1][1]= (blauG1 + blauG2) / 2;
+  *SamplesKante[1][2]= (blauB1 + blauB2) / 2;
+  *SamplesKante[1][3]= (blauC1 + blauC2) / 2;
+
+  *SamplesEcke[1][0]= (EblauR1 + EblauR2) / 2;
+  *SamplesEcke[1][1]= (EblauG1 + EblauG2) / 2;
+  *SamplesEcke[1][2]= (EblauB1 + EblauB2) / 2;
+  *SamplesEcke[1][3]= (EblauC1 + EblauC2) / 2;
+
+  U1();
+  F2();
+  B2();
+  U1();
+  warten(1000);
+
+  uint16_t gruenR1, gruenG1, gruenB1, gruenC1;
+  PCA9548A(0);
+  tcsKante.getRawData(&gruenR1, &gruenG1, &gruenB1, &gruenC1);
+
+  warten(1000);
+
+  uint16_t EgruenR1, EgruenG1, EgruenB1, EgruenC1;
+  PCA9548A(1);
+  tcsEcke.getRawData(&EgruenR1, &EgruenG1, &EgruenB1, &EgruenC1);
+
+  U2();
+  warten(1000);
+
+  uint16_t gruenR2, gruenG2, gruenB2, gruenC2;
+  PCA9548A(0);
+  tcsKante.getRawData(&gruenR2, &gruenG2, &gruenB2, &gruenC2);
+  warten(1000);
+
+  uint16_t EgruenR2, EgruenG2, EgruenB2, EgruenC2;
+  PCA9548A(1);
+  tcsEcke.getRawData(&EgruenR2, &EgruenG2, &EgruenB2, &EgruenC2);
+
+  *SamplesKante[2][0]= (gruenR1 + gruenR2) / 2;
+  *SamplesKante[2][1]= (gruenG1 + gruenG2) / 2;
+  *SamplesKante[2][2]= (gruenB1 + gruenB2) / 2;
+  *SamplesKante[2][3]= (gruenC1 + gruenC2) / 2;
+
+  *SamplesEcke[2][0]= (EgruenR1 + EgruenR2) / 2;
+  *SamplesEcke[2][1]= (EgruenG1 + EgruenG2) / 2;
+  *SamplesEcke[2][2]= (EgruenB1 + EgruenB2) / 2;
+  *SamplesEcke[2][3]= (EgruenC1 + EgruenC2) / 2;
+
+  U1();
+  F3();
+  Bone();
+  R1();
+  L3();
+  U2();
+  warten(1000);
+
+  uint16_t orangeR1, orangeG1, orangeB1, orangeC1;
+  PCA9548A(0);
+  tcsKante.getRawData(&orangeR1, &orangeG1, &orangeB1, &orangeC1);
+
+  warten(1000);
+
+  uint16_t EorangeR1, EorangeG1, EorangeB1, EorangeC1;
+  PCA9548A(1);
+  tcsEcke.getRawData(&EorangeR1, &EorangeG1, &EorangeB1, &EorangeC1);
+
+  U2();
+  warten(1000);
+
+  uint16_t orangeR2, orangeG2, orangeB2, orangeC2;
+  PCA9548A(0);
+  tcsKante.getRawData(&orangeR2, &orangeG2, &orangeB2, &orangeC2);
+
+  warten(1000);
+
+  uint16_t EorangeR2, EorangeG2, EorangeB2, EorangeC2;
+  PCA9548A(1);
+  tcsEcke.getRawData(&EorangeR2, &EorangeG2, &EorangeB2, &EorangeC2);
+
+  *SamplesKante[3][0]= (orangeR1 + orangeR2) / 2;
+  *SamplesKante[3][1]= (orangeG1 + orangeG2) / 2;
+  *SamplesKante[3][2]= (orangeB1 + orangeB2) / 2;
+  *SamplesKante[3][3]= (orangeC1 + orangeC2) / 2;
+
+  *SamplesEcke[3][0]= (EorangeR1 + EorangeR2) / 2;
+  *SamplesEcke[3][1]= (EorangeG1 + EorangeG2) / 2;
+  *SamplesEcke[3][2]= (EorangeB1 + EorangeB2) / 2;
+  *SamplesEcke[3][3]= (EorangeC1 + EorangeC2) / 2;
+
+  L2();
+  R2();
+  U2();
+  warten(1000);
+
+  uint16_t rotR1, rotG1, rotB1, rotC1;
+  PCA9548A(0);
+  tcsKante.getRawData(&rotR1, &rotG1, &rotB1, &rotC1);
+
+  warten(1000);
+
+  uint16_t ErotR1, ErotG1, ErotB1, ErotC1;
+  PCA9548A(1);
+  tcsEcke.getRawData(&ErotR1, &ErotG1, &ErotB1, &ErotC1);
+
+  U2();
+  warten(1000);
+
+  uint16_t rotR2, rotG2, rotB2, rotC2;
+  PCA9548A(0);
+  tcsKante.getRawData(&rotR2, &rotG2, &rotB2, &rotC2);
+
+  warten(1000);
+
+  uint16_t ErotR2, ErotG2, ErotB2, ErotC2;
+  PCA9548A(1);
+  tcsEcke.getRawData(&ErotR2, &ErotG2, &ErotB2, &ErotC2);
+
+  *SamplesKante[4][0]= (rotR1 + rotR2) / 2;
+  *SamplesKante[4][1]= (rotG1 + rotG2) / 2;
+  *SamplesKante[4][2]= (rotB1 + rotB2) / 2;
+  *SamplesKante[4][3]= (rotC1 + rotC2) / 2;
+
+  *SamplesEcke[4][0]= (ErotR1 + ErotR2) / 2;
+  *SamplesEcke[4][1]= (ErotG1 + ErotG2) / 2;
+  *SamplesEcke[4][2]= (ErotB1 + ErotB2) / 2;
+  *SamplesEcke[4][3]= (ErotC1 + ErotC2) / 2;  
+
+  U2();
+  R3();
+  L1();
+  U2();
+  warten(1000);
+
+  uint16_t weissR1, weissG1, weissB1, weissC1;
+  PCA9548A(0);
+  tcsKante.getRawData(&weissR1, &weissG1, &weissB1, &weissC1);
+
+  warten(1000);
+
+  uint16_t EweissR1, EweissG1, EweissB1, EweissC1;
+  PCA9548A(1);
+  tcsEcke.getRawData(&EweissR1, &EweissG1, &EweissB1, &EweissC1);
+
+  U2();
+  warten(1000);
+
+  uint16_t weissR2, weissG2, weissB2, weissC2;
+  PCA9548A(0);
+  tcsKante.getRawData(&weissR2, &weissG2, &weissB2, &weissC2);
+
+  warten(1000);
+
+  uint16_t EweissR2, EweissG2, EweissB2, EweissC2;
+  PCA9548A(1);
+  tcsEcke.getRawData(&EweissR2, &EweissG2, &EweissB2, &EweissC2);
+
+  *SamplesKante[5][0]= (weissR1 + weissR2) / 2;
+  *SamplesKante[5][1]= (weissG1 + weissG2) / 2;
+  *SamplesKante[5][2]= (weissB1 + weissB2) / 2;
+  *SamplesKante[5][3]= (weissC1 + weissC2) / 2;
+
+  *SamplesEcke[5][0]= (EweissR1 + EweissR2) / 2;
+  *SamplesEcke[5][1]= (EweissG1 + EweissG2) / 2;
+  *SamplesEcke[5][2]= (EweissB1 + EweissB2) / 2;
+  *SamplesEcke[5][3]= (EweissC1 + EweissC2) / 2;
+
+  R2();
+  L2();
+
+  Serial2.println("feddisch");
 
 }
+
+
+
 
 
 //Funktion zum warten via Millis(), da delay() ESP32 blockiert
@@ -100,6 +291,85 @@ void warten(long intervall){
   }
 }
 
+int getColourDistance(int redSensor, int greenSensor, int blueSensor, int redSample, int greenSample, int blueSample)
+{
+  // Calculates the Euclidean distance between two RGB colours
+  // https://en.wikipedia.org/wiki/Color_difference
+  return sqrt(pow(redSensor - redSample, 2) + pow(greenSensor - greenSample, 2) + pow(blueSensor - blueSample, 2));
+}
+
+char EckeScan(int SamplesEcke[][5])
+{
+  char ErgebnisEcke;
+  uint16_t redSensor, greenSensor, blueSensor, clearSensor;
+  int colourDistance;
+  int Farbe;
+  PCA9548A(1);
+  tcsEcke.getRawData(&redSensor, &greenSensor, &blueSensor, &clearSensor);
+
+  // Iterate through the array to find a matching colour sample
+  for (byte i = 0; i < 6; i++)
+  {
+    colourDistance = getColourDistance(redSensor, greenSensor, blueSensor, SamplesEcke[i][0], SamplesEcke[i][1], SamplesEcke[i][2]);
+
+    if (colourDistance < 50)
+    {
+      Farbe = SamplesEcke[i][5];
+      switch(Farbe){
+        case 1: //gelb
+          ErgebnisEcke = 'U';        
+        case 2: 
+          ErgebnisEcke = 'R';
+        case 3: 
+          ErgebnisEcke = 'L';
+        case 4: 
+          ErgebnisEcke = 'F';
+        case 5: 
+          ErgebnisEcke = 'B';
+        case 6: 
+          ErgebnisEcke = 'D';
+      }
+      return ErgebnisEcke;
+    }
+  }
+}
+
+char KanteScan(int SamplesKante[][5])
+{
+  char ErgebnisKante;
+  uint16_t redSensor, greenSensor, blueSensor, clearSensor;
+  int colourDistance;
+  int Farbe;
+  PCA9548A(1);
+  tcsKante.getRawData(&redSensor, &greenSensor, &blueSensor, &clearSensor);
+
+  // Iterate through the array to find a matching colour sample
+  for (byte i = 0; i < 6; i++)
+  {
+    colourDistance = getColourDistance(redSensor, greenSensor, blueSensor, SamplesKante[i][0], SamplesKante[i][1], SamplesKante[i][2]);
+
+    if (colourDistance < 50)
+    {
+      Farbe = SamplesKante[i][5];
+      switch(Farbe){
+        case 1: 
+          ErgebnisKante = 'U';        
+        case 2:
+          ErgebnisKante = 'R';
+        case 3: 
+          ErgebnisKante = 'L';
+        case 4: 
+          ErgebnisKante = 'F';
+        case 5: 
+          ErgebnisKante = 'B';
+        case 6: 
+          ErgebnisKante = 'D';
+      }
+      return ErgebnisKante;
+    }
+  }
+}
+
 
 void Scan()
 {
@@ -107,46 +377,46 @@ void Scan()
   String CubeDefinitionString = "XXXXUXXXXXXXXRXXXXXXXXFXXXXXXXXDXXXXXXXXLXXXXXXXXBXXXX";   //Erstellen eines Cube Strings im Richtigen Format; dieser wird als Input für den Lösealgorythmus genutzt
                                                                                             //X als Platzhalter für eingelsenen Werte
 
-  CubeDefinitionString.setCharAt(5, KanteScan());        //Austauschen der Platzhalter an den richtigen Stellen im String gegen die eingescannten Werte
+  CubeDefinitionString.setCharAt(5, KanteScan(SamplesKante));        //Austauschen der Platzhalter an den richtigen Stellen im String gegen die eingescannten Werte
   warten(1000);                                           //Kurzer Delay, um Multiplexer und Farbsensor Zeit zu geben
-  CubeDefinitionString.setCharAt(0, EckeScan());         //Das Austauschen und das Drehen erfolgt nach einer vorher festgelegten Sequenz und Prositionen
+  CubeDefinitionString.setCharAt(0, EckeScan(SamplesEcke));         //Das Austauschen und das Drehen erfolgt nach einer vorher festgelegten Sequenz und Prositionen
 
   U1();                                                 //Drehen des Würfels damit alle Sticker eingescannt werden
   warten(1000);
 
-  CubeDefinitionString.setCharAt(1, KanteScan());
+  CubeDefinitionString.setCharAt(1, KanteScan(SamplesKante));
   warten(1000);
-  CubeDefinitionString.setCharAt(6, EckeScan());
+  CubeDefinitionString.setCharAt(6, EckeScan(SamplesEcke));
 
   U1();
   warten(1000);
 
-  CubeDefinitionString.setCharAt(3, KanteScan());
+  CubeDefinitionString.setCharAt(3, KanteScan(SamplesKante));
   warten(1000);
-  CubeDefinitionString.setCharAt(8, EckeScan());
+  CubeDefinitionString.setCharAt(8, EckeScan(SamplesEcke));
 
   U1();
   warten(1000);
 
-  CubeDefinitionString.setCharAt(7, KanteScan());
+  CubeDefinitionString.setCharAt(7, KanteScan(SamplesKante));
   warten(1000);
-  CubeDefinitionString.setCharAt(2, EckeScan());
+  CubeDefinitionString.setCharAt(2, EckeScan(SamplesEcke));
 
   U1();
   R1();
   L3();
   warten(1000);
 
-  CubeDefinitionString.setCharAt(23, KanteScan());
+  CubeDefinitionString.setCharAt(23, KanteScan(SamplesKante));
   warten(1000);
-  CubeDefinitionString.setCharAt(18, EckeScan());
+  CubeDefinitionString.setCharAt(18, EckeScan(SamplesEcke));
 
   U2();
   warten(1000);
 
-  CubeDefinitionString.setCharAt(21, KanteScan());
+  CubeDefinitionString.setCharAt(21, KanteScan(SamplesKante));
   warten(1000);
-  CubeDefinitionString.setCharAt(26, EckeScan());
+  CubeDefinitionString.setCharAt(26, EckeScan(SamplesEcke));
 
   U2();
   R3();
@@ -156,16 +426,16 @@ void Scan()
   L3();
   warten(1000);
 
-  CubeDefinitionString.setCharAt(19, KanteScan());
+  CubeDefinitionString.setCharAt(19, KanteScan(SamplesKante));
   warten(1000);
-  CubeDefinitionString.setCharAt(24, EckeScan());
+  CubeDefinitionString.setCharAt(24, EckeScan(SamplesEcke));
 
   U2();
   warten(1000);
 
-  CubeDefinitionString.setCharAt(25, KanteScan());
+  CubeDefinitionString.setCharAt(25, KanteScan(SamplesKante));
   warten(1000);
-  CubeDefinitionString.setCharAt(20, EckeScan());
+  CubeDefinitionString.setCharAt(20, EckeScan(SamplesEcke));
 
   U2();
   R3();
@@ -175,16 +445,16 @@ void Scan()
   L2();
   warten(1000);
 
-  CubeDefinitionString.setCharAt(32, KanteScan());
+  CubeDefinitionString.setCharAt(32, KanteScan(SamplesKante));
   warten(1000);
-  CubeDefinitionString.setCharAt(27, EckeScan());
+  CubeDefinitionString.setCharAt(27, EckeScan(SamplesEcke));
 
   U2();
   warten(1000);
 
-  CubeDefinitionString.setCharAt(30, KanteScan());
+  CubeDefinitionString.setCharAt(30, KanteScan(SamplesKante));
   warten(1000);
-  CubeDefinitionString.setCharAt(35, EckeScan());
+  CubeDefinitionString.setCharAt(35, EckeScan(SamplesEcke));
 
   U2();
   R2();
@@ -194,16 +464,16 @@ void Scan()
   L2();
   warten(1000);
 
-  CubeDefinitionString.setCharAt(28, KanteScan());
+  CubeDefinitionString.setCharAt(28, KanteScan(SamplesKante));
   warten(1000);
-  CubeDefinitionString.setCharAt(33, EckeScan());
+  CubeDefinitionString.setCharAt(33, EckeScan(SamplesEcke));
 
   U2();
   warten(1000);
 
-  CubeDefinitionString.setCharAt(34, KanteScan());
+  CubeDefinitionString.setCharAt(34, KanteScan(SamplesKante));
   warten(1000);
-  CubeDefinitionString.setCharAt(29, EckeScan());
+  CubeDefinitionString.setCharAt(29, EckeScan(SamplesEcke));
 
   U2();
   R2();
@@ -213,16 +483,16 @@ void Scan()
   L1();
   warten(1000);
 
-  CubeDefinitionString.setCharAt(48, KanteScan());
+  CubeDefinitionString.setCharAt(48, KanteScan(SamplesKante));
   warten(1000);
-  CubeDefinitionString.setCharAt(53, EckeScan());
+  CubeDefinitionString.setCharAt(53, EckeScan(SamplesEcke));
 
   U2();
   warten(1000);
 
-  CubeDefinitionString.setCharAt(50, KanteScan());
+  CubeDefinitionString.setCharAt(50, KanteScan(SamplesKante));
   warten(1000);
-  CubeDefinitionString.setCharAt(45, EckeScan());
+  CubeDefinitionString.setCharAt(45, EckeScan(SamplesEcke));
 
   U2();
   R1();
@@ -232,16 +502,16 @@ void Scan()
   L1();
   warten(1000);
 
-  CubeDefinitionString.setCharAt(52, KanteScan());
+  CubeDefinitionString.setCharAt(52, KanteScan(SamplesKante));
   warten(1000);
-  CubeDefinitionString.setCharAt(47, EckeScan());
+  CubeDefinitionString.setCharAt(47, EckeScan(SamplesEcke));
 
   U2();
   warten(1000);
 
-  CubeDefinitionString.setCharAt(46, KanteScan());
+  CubeDefinitionString.setCharAt(46, KanteScan(SamplesKante));
   warten(1000);
-  CubeDefinitionString.setCharAt(51, EckeScan());
+  CubeDefinitionString.setCharAt(51, EckeScan(SamplesEcke));
 
   U2();
   R1();
@@ -252,16 +522,16 @@ void Scan()
   U1();
   warten(1000);
 
-  CubeDefinitionString.setCharAt(39, KanteScan());
+  CubeDefinitionString.setCharAt(39, KanteScan(SamplesKante));
   warten(1000);
-  CubeDefinitionString.setCharAt(44, EckeScan());
+  CubeDefinitionString.setCharAt(44, EckeScan(SamplesEcke));
 
   U2();
   warten(1000);
 
-  CubeDefinitionString.setCharAt(41, KanteScan());
+  CubeDefinitionString.setCharAt(41, KanteScan(SamplesKante));
   warten(1000);
-  CubeDefinitionString.setCharAt(36, EckeScan());
+  CubeDefinitionString.setCharAt(36, EckeScan(SamplesEcke));
 
   U1();
   F3();
@@ -272,16 +542,16 @@ void Scan()
   U1();
   warten(1000);
 
-  CubeDefinitionString.setCharAt(43, KanteScan());
+  CubeDefinitionString.setCharAt(43, KanteScan(SamplesKante));
   warten(1000);
-  CubeDefinitionString.setCharAt(38, EckeScan());
+  CubeDefinitionString.setCharAt(38, EckeScan(SamplesEcke));
 
   U2();
   warten(1000);
 
-  CubeDefinitionString.setCharAt(37, KanteScan());
+  CubeDefinitionString.setCharAt(37, KanteScan(SamplesKante));
   warten(1000);
-  CubeDefinitionString.setCharAt(42, EckeScan());
+  CubeDefinitionString.setCharAt(42, EckeScan(SamplesEcke));
 
   U1();
   F3();
@@ -292,16 +562,16 @@ void Scan()
   U1();
   warten(1000);
 
-  CubeDefinitionString.setCharAt(14, KanteScan());
+  CubeDefinitionString.setCharAt(14, KanteScan(SamplesKante));
   warten(1000);
-  CubeDefinitionString.setCharAt(9, EckeScan());
+  CubeDefinitionString.setCharAt(9, EckeScan(SamplesEcke));
 
   U2();
   warten(1000);
 
-  CubeDefinitionString.setCharAt(12, KanteScan());
+  CubeDefinitionString.setCharAt(12, KanteScan(SamplesKante));
   warten(1000);
-  CubeDefinitionString.setCharAt(17, EckeScan());
+  CubeDefinitionString.setCharAt(17, EckeScan(SamplesEcke));
 
   U1();
   F1();
@@ -312,16 +582,16 @@ void Scan()
   U1();
   warten(1000);
 
-  CubeDefinitionString.setCharAt(10, KanteScan());
+  CubeDefinitionString.setCharAt(10, KanteScan(SamplesKante));
   warten(1000);
-  CubeDefinitionString.setCharAt(15, EckeScan());
+  CubeDefinitionString.setCharAt(15, EckeScan(SamplesEcke));
 
   U2();
   warten(1000);
 
-  CubeDefinitionString.setCharAt(16, KanteScan());
+  CubeDefinitionString.setCharAt(16, KanteScan(SamplesKante));
   warten(1000);
-  CubeDefinitionString.setCharAt(11, EckeScan());
+  CubeDefinitionString.setCharAt(11, EckeScan(SamplesEcke));
 
   U1();
   F1();
@@ -630,7 +900,7 @@ String Loesen(String CubeSolveString)
       R3();
     }
   }
-  Serial2.println("Fertig gelöst!")
+  Serial2.println("Fertig gelöst!");
 }
 
 
@@ -677,6 +947,11 @@ void setup() {
 
 void loop ()
 {
+  String start = RPiEmpfangen();
+  warten(1000);
+  if (start = "calib"){
+    Kalibrieren(&SamplesKante, &SamplesEcke);
+  }
   Verdrehen();
   String weiter = RPiEmpfangen();
   while (weiter != "GO"){
