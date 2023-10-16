@@ -947,6 +947,7 @@ void setup() {
 
 void loop ()
 {
+  Serial.print("Start des Loops!");
   String start = RPiEmpfangen();
   warten(1000);
   if (start = "calib"){
