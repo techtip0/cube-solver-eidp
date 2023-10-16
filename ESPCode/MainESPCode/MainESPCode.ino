@@ -405,6 +405,7 @@ void Scan()
   U1();
   R1();
   L3();
+  U4();
   warten(1000);
 
   CubeDefinitionString.setCharAt(23, KanteScan(SamplesKante));
@@ -424,6 +425,7 @@ void Scan()
   F1();
   R1();
   L3();
+  U4();
   warten(1000);
 
   CubeDefinitionString.setCharAt(19, KanteScan(SamplesKante));
@@ -443,6 +445,7 @@ void Scan()
   F3();
   R2();
   L2();
+  U4();
   warten(1000);
 
   CubeDefinitionString.setCharAt(32, KanteScan(SamplesKante));
@@ -462,6 +465,7 @@ void Scan()
   D1();
   R2();
   L2();
+  U4();
   warten(1000);
 
   CubeDefinitionString.setCharAt(28, KanteScan(SamplesKante));
@@ -481,6 +485,7 @@ void Scan()
   D3();
   R3();
   L1();
+  U4();
   warten(1000);
 
   CubeDefinitionString.setCharAt(48, KanteScan(SamplesKante));
@@ -500,6 +505,7 @@ void Scan()
   Bone();
   R3();
   L1();
+  U4();
   warten(1000);
 
   CubeDefinitionString.setCharAt(52, KanteScan(SamplesKante));
@@ -667,6 +673,10 @@ void U2() {
 }
 void U3() {
   gelb.move(-800);
+  gelb.runToPosition();
+}
+void U4() {
+  gelb.move(3200);
   gelb.runToPosition();
 }
 
@@ -915,31 +925,31 @@ void setup() {
 	// initial speed and the target position
 	gruen.setMaxSpeed(20000);
 	gruen.setAcceleration(10000);
-	gruen.setSpeed(20000);
+	gruen.setSpeed(10000);
 	
 
   weiss.setMaxSpeed(20000);
 	weiss.setAcceleration(10000);
-	weiss.setSpeed(20000);
+	weiss.setSpeed(10000);
 
   rot.setMaxSpeed(20000);
 	rot.setAcceleration(10000);
-	rot.setSpeed(20000);
+	rot.setSpeed(10000);
 
 
   orange.setMaxSpeed(20000);
 	orange.setAcceleration(10000);
-	orange.setSpeed(20000);
+	orange.setSpeed(10000);
 
 
   blau.setMaxSpeed(20000);
 	blau.setAcceleration(10000);
-	blau.setSpeed(20000);
+	blau.setSpeed(10000);
 
 
   gelb.setMaxSpeed(20000);
 	gelb.setAcceleration(10000);
-	gelb.setSpeed(20000);
+	gelb.setSpeed(10000);
 
 }
 
