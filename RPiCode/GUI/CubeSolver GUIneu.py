@@ -138,6 +138,7 @@ while True:
                 i=0
             #time.sleep(0.5)
             temp = ser.readline()
+            temp2 = temp.strip()
             ScanErgebnis = temp.decode()
             t = 2
             #ser.readline
