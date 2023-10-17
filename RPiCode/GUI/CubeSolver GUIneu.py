@@ -149,6 +149,7 @@ while True:
             break
         if event == "Lösen!":
             solution = sv.solve(ScanErgebnis,19,2)
+            print(solution)
             ser.write(solution.encode())
             window[f'-COL{layout}-'].update(visible=False)
             if layout < 6:

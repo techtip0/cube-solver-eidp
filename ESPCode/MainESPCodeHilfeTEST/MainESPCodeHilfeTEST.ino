@@ -302,6 +302,16 @@ void Kalibrieren(uint16_t (&SamplesKante)[6][5], uint16_t (&SamplesEcke)[6][5])
     }
     Serial.print("\n");
   }  
+  Serial.println("");
+  for(int a = 0; a < 6; a++)
+  {
+    for(int b = 0; b < 5; b++)
+    {
+      Serial.print(SamplesKante[a][b]);
+      Serial.print(" ");
+    }
+    Serial.print("\n");
+  }  
 
 }
 
@@ -345,29 +355,34 @@ char EckeScan(uint16_t SamplesEcke[][5])
       Farbe = SamplesEcke[i][4];
       switch(Farbe){
         case 1: //gelb
-          Serial.println("Gelb!");
+          Serial.println("Gelb an Ecke!");
           ErgebnisEcke = 'U';
           break;        
         case 2: 
+          Serial.println("Blau an Ecke!");
           ErgebnisEcke = 'R';
           break;
         case 3: 
+          Serial.println("Gruen an Ecke!");
           ErgebnisEcke = 'L';
           break;
         case 4: 
+          Serial.println("Orange an Ecke!");
           ErgebnisEcke = 'F';
           break;
         case 5: 
+          Serial.println("Rot an Ecke!");
           ErgebnisEcke = 'B';
           break;
         case 6: 
+          Serial.println("Weiss an Ecke!");
           ErgebnisEcke = 'D';
           break;
       }
       return ErgebnisEcke;
     }
   }
-  Serial.println("ACHTUNG Fehler bei Erkennung!");
+  Serial.println("ACHTUNG Fehler bei Erkennung an Ecke!");
   return 'X';
 }
 
@@ -377,9 +392,8 @@ char KanteScan(uint16_t SamplesKante[][5])
   uint16_t redSensor, greenSensor, blueSensor, clearSensor;
   int colourDistance;
   int Farbe;
-  PCA9548A(1);
+  PCA9548A(0);
   tcsKante.getRawData(&redSensor, &greenSensor, &blueSensor, &clearSensor);
-  warten(1000);
   // Iterate through the array to find a matching colour sample
   for (int i = 0; i < 6; i++)
   {
@@ -390,32 +404,34 @@ char KanteScan(uint16_t SamplesKante[][5])
       Farbe = SamplesKante[i][4];
       switch(Farbe){
         case 1: 
+          Serial.println("Gelb an Kante!");
           ErgebnisKante = 'U'; 
           break;      
         case 2:
+          Serial.println("Blau an Kante!");
           ErgebnisKante = 'R';
           break;
         case 3: 
+          Serial.println("Gruen an Kante!");
           ErgebnisKante = 'L';
           break;
         case 4: 
+          Serial.println("Orange an Kante!");
           ErgebnisKante = 'F';
           break;
         case 5: 
+          Serial.println("Rot an Kante!");
           ErgebnisKante = 'B';
           break;
         case 6: 
+          Serial.println("Weiss an Kante!");
           ErgebnisKante = 'D';
           break;
       }
       return ErgebnisKante;
     }
-    else{
-      Serial.println("Keine Farbe");
-
-    }
   }
-  Serial.println("ACHTUNG Fehler bei Erkennung!");
+  Serial.println("ACHTUNG Fehler bei Erkennung an Kante!");
   return 'X';
 }
 
@@ -844,7 +860,7 @@ void Verdrehen()
 }
 
 
-String Loesen(String CubeSolveString) 
+void Loesen(String CubeSolveString) 
 {
 
 
@@ -1011,7 +1027,7 @@ void loop ()
   Serial.print("Start des Loops!");
   start = RPiEmpfangen();
   warten(1000);
-  if (start = "calib"){
+  if (start == "calib"){
     Kalibrieren(SamplesKante, SamplesEcke);
   }
   start = "";
@@ -1025,6 +1041,7 @@ void loop ()
   Scan();
   String CubeString = RPiEmpfangen();
   warten(1000);
+  Serial.print(CubeString);
   Loesen(CubeString);
 
   Serial.print("Ende des Loops erreicht");
