@@ -350,7 +350,7 @@ char EckeScan(uint16_t SamplesEcke[][5])
   {
     colourDistance = getColourDistance(redSensor, greenSensor, blueSensor, SamplesEcke[i][0], SamplesEcke[i][1], SamplesEcke[i][2]);
 
-    if (colourDistance < 120)
+    if (colourDistance < 110)
     {
       Farbe = SamplesEcke[i][4];
       switch(Farbe){
@@ -399,7 +399,7 @@ char KanteScan(uint16_t SamplesKante[][5])
   {
     colourDistance = getColourDistance(redSensor, greenSensor, blueSensor, SamplesKante[i][0], SamplesKante[i][1], SamplesKante[i][2]);
 
-    if (colourDistance < 120)
+    if (colourDistance < 110)
     {
       Farbe = SamplesKante[i][4];
       switch(Farbe){
@@ -807,6 +807,13 @@ String RPiEmpfangen(){
   return received;
 }
 
+String RPiEmpfangenLine(){
+  while (Serial2.available() == 0){}
+  String received = Serial2.readStringUntil('\n');
+  received.trim();
+  return received;
+}
+
 
 
 
@@ -1039,7 +1046,7 @@ void loop ()
   weiter = "";
   Serial2.flush();
   Scan();
-  String CubeString = RPiEmpfangen();
+  String CubeString = RPiEmpfangenLine();
   warten(1000);
   Serial.print(CubeString);
   Loesen(CubeString);

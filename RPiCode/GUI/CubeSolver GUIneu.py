@@ -149,7 +149,8 @@ while True:
         if event == psg.WIN_CLOSED:
             break
         if event == "Lösen!":
-            solution = sv.solve(ScanErgebnis,19,2)
+            solutiontemp = sv.solve(ScanErgebnis,19,2)
+            solution = solutiontemp + '\n'
             print(solution)
             ser.write(solution.encode())
             window[f'-COL{layout}-'].update(visible=False)
