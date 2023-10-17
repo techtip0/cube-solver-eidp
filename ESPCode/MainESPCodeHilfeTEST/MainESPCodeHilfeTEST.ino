@@ -22,7 +22,7 @@ void PCA9548A(uint8_t bus){
 
 
 
-int SamplesKante[6][5] = {
+uint16_t SamplesKante[6][5] = {
   { 0,  0,  0,  0,  1},
   { 0,  0,  0,  0,  2},
   { 0,  0,  0,  0,  3},
@@ -31,7 +31,7 @@ int SamplesKante[6][5] = {
   { 0,  0,  0,  0,  6},
 };
 
-int SamplesEcke[6][5] = {
+uint16_t SamplesEcke[6][5] = {
   { 0,  0,  0,  0,  1},
   { 0,  0,  0,  0,  2},
   { 0,  0,  0,  0,  3},
@@ -40,45 +40,47 @@ int SamplesEcke[6][5] = {
   { 0,  0,  0,  0,  6},
 };
 
-void Kalibrieren(int (*SamplesKante)[6][5], int (*SamplesEcke)[6][5]) 
+void Kalibrieren(uint16_t (&SamplesKante)[6][5], uint16_t (&SamplesEcke)[6][5]) 
 {
 
 
 
   U2();
   warten(1000);
-  static uint16_t gelbR1, gelbG1, gelbB1, gelbC1;
+  static uint16_t KR1, KG1, KB1, KC1;
 
   PCA9548A(0);
-  tcsKante.getRawData(&gelbR1, &gelbG1, &gelbB1, &gelbC1);
+  tcsKante.getRawData(&KR1, &KG1, &KB1, &KC1);
 
   warten(1000);
-  static uint16_t EgelbR1, EgelbG1, EgelbB1, EgelbC1;
+  static uint16_t ER1, EG1, EB1, EC1;
   PCA9548A(1);
-  tcsEcke.getRawData(&EgelbR1, &EgelbG1, &EgelbB1, &EgelbC1);
+  tcsEcke.getRawData(&ER1, &EG1, &EB1, &EC1);
 
   U1();
+  warten(1000);
+  Serial.println("Test");
 
-  static uint16_t gelbR2, gelbG2, gelbB2, gelbC2;
+  static uint16_t KR2, KG2, KB2, KC2;
   PCA9548A(0);
-  tcsKante.getRawData(&gelbR2, &gelbG2, &gelbB2, &gelbC2);
+  tcsKante.getRawData(&KR2, &KG2, &KB2, &KC2);
 
   warten(1000);
-  static uint16_t EgelbR2, EgelbG2, EgelbB2, EgelbC2;
+  static uint16_t ER2, EG2, EB2, EC2;
   PCA9548A(1);
-  tcsEcke.getRawData(&EgelbR2, &EgelbG2, &EgelbB2, &EgelbC2);
+  tcsEcke.getRawData(&ER2, &EG2, &EB2, &EC2);
 
-  *SamplesKante[0][0]= (gelbR1 + gelbR2) / 2;
-  *SamplesKante[0][1]= (gelbG1 + gelbG2) / 2;
-  *SamplesKante[0][2]= (gelbB1 + gelbB2) / 2;
-  *SamplesKante[0][3]= (gelbC1 + gelbC2) / 2;
+  SamplesKante[0][0]= (KR1 + KR2) / 2;
+  SamplesKante[0][1]= (KG1 + KG2) / 2;
+  SamplesKante[0][2]= (KB1 + KB2) / 2;
+  SamplesKante[0][3]= (KC1 + KC2) / 2;
 
-  *SamplesEcke[0][0]= (EgelbR1 + EgelbR2) / 2;
-  *SamplesEcke[0][1]= (EgelbG1 + EgelbG2) / 2;
-  *SamplesEcke[0][2]= (EgelbB1 + EgelbB2) / 2;
-  *SamplesEcke[0][3]= (EgelbC1 + EgelbC2) / 2;  
+  SamplesEcke[0][0]= (ER1 + ER2) / 2;
+  SamplesEcke[0][1]= (EG1 + EG2) / 2;
+  SamplesEcke[0][2]= (EB1 + EB2) / 2;
+  SamplesEcke[0][3]= (EC1 + EC2) / 2;  
 
-
+  Serial.println("Test2");
 
   U1();
   F3();
@@ -86,37 +88,36 @@ void Kalibrieren(int (*SamplesKante)[6][5], int (*SamplesEcke)[6][5])
   U1();
   warten(1000);
 
-  static uint16_t blauR1, blauG1, blauB1, blauC1;
+
   PCA9548A(0);
-  tcsKante.getRawData(&blauR1, &blauG1, &blauB1, &blauC1);
+  tcsKante.getRawData(&KR1, &KG1, &KB1, &KC1);
   warten(1000);
 
-  static uint16_t EblauR1, EblauG1, EblauB1, EblauC1;
   PCA9548A(1);
-  tcsEcke.getRawData(&EblauR1, &EblauG1, &EblauB1, &EblauC1);
+  tcsEcke.getRawData(&ER1, &EG1, &EB1, &EC1);
 
 
   U2();
 
-  static uint16_t blauR2, blauG2, blauB2, blauC2;
+
   PCA9548A(0);
-  tcsKante.getRawData(&blauR2, &blauG2, &blauB2, &blauC2);
+  tcsKante.getRawData(&KR2, &KG2, &KB2, &KC2);
 
   warten(1000);
 
-  static uint16_t EblauR2, EblauG2, EblauB2, EblauC2;
+
   PCA9548A(1);
-  tcsEcke.getRawData(&EblauR2, &EblauG2, &EblauB2, &EblauC2);
+  tcsEcke.getRawData(&ER2, &EG2, &EB2, &EC2);
 
-  *SamplesKante[1][0]= (blauR1 + blauR2) / 2;
-  *SamplesKante[1][1]= (blauG1 + blauG2) / 2;
-  *SamplesKante[1][2]= (blauB1 + blauB2) / 2;
-  *SamplesKante[1][3]= (blauC1 + blauC2) / 2;
+  SamplesKante[1][0]= (KR1 + KR2) / 2;
+  SamplesKante[1][1]= (KG1 + KG2) / 2;
+  SamplesKante[1][2]= (KB1 + KB2) / 2;
+  SamplesKante[1][3]= (KC1 + KC2) / 2;
 
-  *SamplesEcke[1][0]= (EblauR1 + EblauR2) / 2;
-  *SamplesEcke[1][1]= (EblauG1 + EblauG2) / 2;
-  *SamplesEcke[1][2]= (EblauB1 + EblauB2) / 2;
-  *SamplesEcke[1][3]= (EblauC1 + EblauC2) / 2;
+  SamplesEcke[1][0]= (ER1 + ER2) / 2;
+  SamplesEcke[1][1]= (EG1 + EG2) / 2;
+  SamplesEcke[1][2]= (EB1 + EB2) / 2;
+  SamplesEcke[1][3]= (EC1 + EC2) / 2;
 
   U1();
   F2();
@@ -124,37 +125,36 @@ void Kalibrieren(int (*SamplesKante)[6][5], int (*SamplesEcke)[6][5])
   U1();
   warten(1000);
 
-  static uint16_t gruenR1, gruenG1, gruenB1, gruenC1;
+
   PCA9548A(0);
-  tcsKante.getRawData(&gruenR1, &gruenG1, &gruenB1, &gruenC1);
+  tcsKante.getRawData(&KR1, &KG1, &KB1, &KC1);
 
   warten(1000);
 
-  static uint16_t EgruenR1, EgruenG1, EgruenB1, EgruenC1;
+
   PCA9548A(1);
-  tcsEcke.getRawData(&EgruenR1, &EgruenG1, &EgruenB1, &EgruenC1);
+  tcsEcke.getRawData(&ER1, &EG1, &EB1, &EC1);
 
   U2();
   warten(1000);
 
-  static uint16_t gruenR2, gruenG2, gruenB2, gruenC2;
+
   PCA9548A(0);
-  tcsKante.getRawData(&gruenR2, &gruenG2, &gruenB2, &gruenC2);
+  tcsKante.getRawData(&KR2, &KG2, &KB2, &KC2);
   warten(1000);
 
-  static uint16_t EgruenR2, EgruenG2, EgruenB2, EgruenC2;
   PCA9548A(1);
-  tcsEcke.getRawData(&EgruenR2, &EgruenG2, &EgruenB2, &EgruenC2);
+  tcsEcke.getRawData(&ER2, &EG2, &EB2, &EC2);
 
-  *SamplesKante[2][0]= (gruenR1 + gruenR2) / 2;
-  *SamplesKante[2][1]= (gruenG1 + gruenG2) / 2;
-  *SamplesKante[2][2]= (gruenB1 + gruenB2) / 2;
-  *SamplesKante[2][3]= (gruenC1 + gruenC2) / 2;
+  SamplesKante[2][0]= (KR1 + KR2) / 2;
+  SamplesKante[2][1]= (KG1 + KG2) / 2;
+  SamplesKante[2][2]= (KB1 + KB2) / 2;
+  SamplesKante[2][3]= (KC1 + KC2) / 2;
 
-  *SamplesEcke[2][0]= (EgruenR1 + EgruenR2) / 2;
-  *SamplesEcke[2][1]= (EgruenG1 + EgruenG2) / 2;
-  *SamplesEcke[2][2]= (EgruenB1 + EgruenB2) / 2;
-  *SamplesEcke[2][3]= (EgruenC1 + EgruenC2) / 2;
+  SamplesEcke[2][0]= (ER1 + ER2) / 2;
+  SamplesEcke[2][1]= (EG1 + EG2) / 2;
+  SamplesEcke[2][2]= (EB1 + EB2) / 2;
+  SamplesEcke[2][3]= (EC1 + EC2) / 2;
 
   U1();
   F3();
@@ -164,121 +164,144 @@ void Kalibrieren(int (*SamplesKante)[6][5], int (*SamplesEcke)[6][5])
   U2();
   warten(1000);
 
-  static uint16_t orangeR1, orangeG1, orangeB1, orangeC1;
+
   PCA9548A(0);
-  tcsKante.getRawData(&orangeR1, &orangeG1, &orangeB1, &orangeC1);
+  tcsKante.getRawData(&KR1, &KG1, &KB1, &KC1);
 
   warten(1000);
 
-  static uint16_t EorangeR1, EorangeG1, EorangeB1, EorangeC1;
+
   PCA9548A(1);
-  tcsEcke.getRawData(&EorangeR1, &EorangeG1, &EorangeB1, &EorangeC1);
+  tcsEcke.getRawData(&ER1, &EG1, &EB1, &EC1);
 
   U2();
   warten(1000);
 
-  static uint16_t orangeR2, orangeG2, orangeB2, orangeC2;
+
   PCA9548A(0);
-  tcsKante.getRawData(&orangeR2, &orangeG2, &orangeB2, &orangeC2);
+  tcsKante.getRawData(&KR2, &KG2, &KB2, &KC2);
 
   warten(1000);
 
-  static uint16_t EorangeR2, EorangeG2, EorangeB2, EorangeC2;
+
   PCA9548A(1);
-  tcsEcke.getRawData(&EorangeR2, &EorangeG2, &EorangeB2, &EorangeC2);
+  tcsEcke.getRawData(&ER2, &EG2, &EB2, &EC2);
 
-  *SamplesKante[3][0]= (orangeR1 + orangeR2) / 2;
-  *SamplesKante[3][1]= (orangeG1 + orangeG2) / 2;
-  *SamplesKante[3][2]= (orangeB1 + orangeB2) / 2;
-  *SamplesKante[3][3]= (orangeC1 + orangeC2) / 2;
+  SamplesKante[3][0]= (KR1 + KR2) / 2;
+  SamplesKante[3][1]= (KG1 + KG2) / 2;
+  SamplesKante[3][2]= (KB1 + KB2) / 2;
+  SamplesKante[3][3]= (KC1 + KC2) / 2;
 
-  *SamplesEcke[3][0]= (EorangeR1 + EorangeR2) / 2;
-  *SamplesEcke[3][1]= (EorangeG1 + EorangeG2) / 2;
-  *SamplesEcke[3][2]= (EorangeB1 + EorangeB2) / 2;
-  *SamplesEcke[3][3]= (EorangeC1 + EorangeC2) / 2;
+  SamplesEcke[3][0]= (ER1 + ER2) / 2;
+  SamplesEcke[3][1]= (EG1 + EG2) / 2;
+  SamplesEcke[3][2]= (EB1 + EB2) / 2;
+  SamplesEcke[3][3]= (EC1 + EC2) / 2;
 
   L2();
   R2();
   U2();
   warten(1000);
 
-  static uint16_t rotR1, rotG1, rotB1, rotC1;
+
   PCA9548A(0);
-  tcsKante.getRawData(&rotR1, &rotG1, &rotB1, &rotC1);
+  tcsKante.getRawData(&KR1, &KG1, &KB1, &KC1);
 
   warten(1000);
 
-  static uint16_t ErotR1, ErotG1, ErotB1, ErotC1;
+
   PCA9548A(1);
-  tcsEcke.getRawData(&ErotR1, &ErotG1, &ErotB1, &ErotC1);
+  tcsEcke.getRawData(&ER1, &EG1, &EB1, &EC1);
 
   U2();
   warten(1000);
 
-  static uint16_t rotR2, rotG2, rotB2, rotC2;
+
   PCA9548A(0);
-  tcsKante.getRawData(&rotR2, &rotG2, &rotB2, &rotC2);
+  tcsKante.getRawData(&KR2, &KG2, &KB2, &KC2);
 
   warten(1000);
+  Serial.println("test3");
 
-  static uint16_t ErotR2, ErotG2, ErotB2, ErotC2;
   PCA9548A(1);
-  tcsEcke.getRawData(&ErotR2, &ErotG2, &ErotB2, &ErotC2);
+  tcsEcke.getRawData(&ER2, &EG2, &EB2, &EC2);
 
-  *SamplesKante[4][0]= (rotR1 + rotR2) / 2;
-  *SamplesKante[4][1]= (rotG1 + rotG2) / 2;
-  *SamplesKante[4][2]= (rotB1 + rotB2) / 2;
-  *SamplesKante[4][3]= (rotC1 + rotC2) / 2;
+  SamplesKante[4][0]= (KR1 + KR2) / 2;
+  SamplesKante[4][1]= (KG1 + KG2) / 2;
+  SamplesKante[4][2]= (KB1 + KB2) / 2;
+  SamplesKante[4][3]= (KC1 + KC2) / 2;
 
-  *SamplesEcke[4][0]= (ErotR1 + ErotR2) / 2;
-  *SamplesEcke[4][1]= (ErotG1 + ErotG2) / 2;
-  *SamplesEcke[4][2]= (ErotB1 + ErotB2) / 2;
-  *SamplesEcke[4][3]= (ErotC1 + ErotC2) / 2;  
+  SamplesEcke[4][0]= (ER1 + ER2) / 2;
+  SamplesEcke[4][1]= (EG1 + EG2) / 2;
+  SamplesEcke[4][2]= (EB1 + EB2) / 2;
+  SamplesEcke[4][3]= (EC1 + EC2) / 2;  
 
-  Serial.println(heap_caps_get_free_size(MALLOC_CAP_8BIT));
 
   R3();
   L1();
   U2();
   warten(1000);
 
-  static uint16_t weissR1, weissG1, weissB1, weissC1;
+
   PCA9548A(0);
-  tcsKante.getRawData(&weissR1, &weissG1, &weissB1, &weissC1);
+  tcsKante.getRawData(&KR1, &KG1, &KB1, &KC1);
 
   warten(1000);
 
-  static uint16_t EweissR1, EweissG1, EweissB1, EweissC1;
+
   PCA9548A(1);
-  tcsEcke.getRawData(&EweissR1, &EweissG1, &EweissB1, &EweissC1);
+  tcsEcke.getRawData(&ER1, &EG1, &EB1, &EC1);
 
   U2();
   warten(1000);
 
-  static uint16_t weissR2, weissG2, weissB2, weissC2;
+
   PCA9548A(0);
-  tcsKante.getRawData(&weissR2, &weissG2, &weissB2, &weissC2);
+  tcsKante.getRawData(&KR2, &KG2, &KB2, &KC2);
 
   warten(1000);
 
-  static uint16_t EweissR2, EweissG2, EweissB2, EweissC2;
+
   PCA9548A(1);
-  tcsEcke.getRawData(&EweissR2, &EweissG2, &EweissB2, &EweissC2);
+  tcsEcke.getRawData(&ER2, &EG2, &EB2, &EC2);
 
-  *SamplesKante[5][0]= (weissR1 + weissR2) / 2;
-  *SamplesKante[5][1]= (weissG1 + weissG2) / 2;
-  *SamplesKante[5][2]= (weissB1 + weissB2) / 2;
-  *SamplesKante[5][3]= (weissC1 + weissC2) / 2;
+  Serial.println("Test4");
 
-  *SamplesEcke[5][0]= (EweissR1 + EweissR2) / 2;
-  *SamplesEcke[5][1]= (EweissG1 + EweissG2) / 2;
-  *SamplesEcke[5][2]= (EweissB1 + EweissB2) / 2;
-  *SamplesEcke[5][3]= (EweissC1 + EweissC2) / 2;
+  SamplesKante[5][0]= (KR1 + KR2) / 2;
+  SamplesKante[5][1]= (KG1 + KG2) / 2;
+  SamplesKante[5][2]= (KB1 + KB2) / 2;
+  SamplesKante[5][3]= (KC1 + KC2) / 2;
+
+  SamplesEcke[5][0]= (ER1 + ER2) / 2;
+  SamplesEcke[5][1]= (EG1 + EG2) / 2;
+  SamplesEcke[5][2]= (EB1 + EB2) / 2;
+  SamplesEcke[5][3]= (EC1 + EC2) / 2;
+
+  warten(3000);
+
+  Serial.println("Test5");
 
   R2();
   L2();
+  Serial.println("EndeTest");
+  warten(5000);
+  Serial2.flush();
+  warten(10000);
 
-  Serial2.println("feddisch");
+
+  Serial2.print("feddisch");
+
+  Serial.print(SamplesEcke[0][0]);
+  Serial.println("");
+
+  for(int a = 0; a < 6; a++)
+  {
+    for(int b = 0; b < 5; b++)
+    {
+      Serial.print(SamplesEcke[a][b]);
+      Serial.print(" ");
+    }
+    Serial.print("\n");
+  }  
 
 }
 
@@ -302,8 +325,9 @@ int getColourDistance(int redSensor, int greenSensor, int blueSensor, int redSam
   return sqrt(pow(redSensor - redSample, 2) + pow(greenSensor - greenSample, 2) + pow(blueSensor - blueSample, 2));
 }
 
-char EckeScan(int SamplesEcke[][5])
+char EckeScan(uint16_t SamplesEcke[][5])
 {
+
   char ErgebnisEcke;
   uint16_t redSensor, greenSensor, blueSensor, clearSensor;
   int colourDistance;
@@ -312,33 +336,42 @@ char EckeScan(int SamplesEcke[][5])
   tcsEcke.getRawData(&redSensor, &greenSensor, &blueSensor, &clearSensor);
 
   // Iterate through the array to find a matching colour sample
-  for (byte i = 0; i < 6; i++)
+  for (int i = 0; i < 6; i++)
   {
     colourDistance = getColourDistance(redSensor, greenSensor, blueSensor, SamplesEcke[i][0], SamplesEcke[i][1], SamplesEcke[i][2]);
 
-    if (colourDistance < 50)
+    if (colourDistance < 120)
     {
-      Farbe = SamplesEcke[i][5];
+      Farbe = SamplesEcke[i][4];
       switch(Farbe){
         case 1: //gelb
-          ErgebnisEcke = 'U';        
+          Serial.println("Gelb!");
+          ErgebnisEcke = 'U';
+          break;        
         case 2: 
           ErgebnisEcke = 'R';
+          break;
         case 3: 
           ErgebnisEcke = 'L';
+          break;
         case 4: 
           ErgebnisEcke = 'F';
+          break;
         case 5: 
           ErgebnisEcke = 'B';
+          break;
         case 6: 
           ErgebnisEcke = 'D';
+          break;
       }
       return ErgebnisEcke;
     }
   }
+  Serial.println("ACHTUNG Fehler bei Erkennung!");
+  return 'X';
 }
 
-char KanteScan(int SamplesKante[][5])
+char KanteScan(uint16_t SamplesKante[][5])
 {
   char ErgebnisKante;
   uint16_t redSensor, greenSensor, blueSensor, clearSensor;
@@ -346,35 +379,44 @@ char KanteScan(int SamplesKante[][5])
   int Farbe;
   PCA9548A(1);
   tcsKante.getRawData(&redSensor, &greenSensor, &blueSensor, &clearSensor);
-
+  warten(1000);
   // Iterate through the array to find a matching colour sample
-  for (byte i = 0; i < 6; i++)
+  for (int i = 0; i < 6; i++)
   {
     colourDistance = getColourDistance(redSensor, greenSensor, blueSensor, SamplesKante[i][0], SamplesKante[i][1], SamplesKante[i][2]);
 
-    if (colourDistance < 50)
+    if (colourDistance < 120)
     {
-      Farbe = SamplesKante[i][5];
+      Farbe = SamplesKante[i][4];
       switch(Farbe){
         case 1: 
-          ErgebnisKante = 'U';        
+          ErgebnisKante = 'U'; 
+          break;      
         case 2:
           ErgebnisKante = 'R';
+          break;
         case 3: 
           ErgebnisKante = 'L';
+          break;
         case 4: 
           ErgebnisKante = 'F';
+          break;
         case 5: 
           ErgebnisKante = 'B';
+          break;
         case 6: 
           ErgebnisKante = 'D';
+          break;
       }
       return ErgebnisKante;
     }
     else{
       Serial.println("Keine Farbe");
+
     }
   }
+  Serial.println("ACHTUNG Fehler bei Erkennung!");
+  return 'X';
 }
 
 
@@ -383,7 +425,8 @@ void Scan()
 
   String CubeDefinitionString = "XXXXUXXXXXXXXRXXXXXXXXFXXXXXXXXDXXXXXXXXLXXXXXXXXBXXXX";   //Erstellen eines Cube Strings im Richtigen Format; dieser wird als Input für den Lösealgorythmus genutzt
                                                                                             //X als Platzhalter für eingelsenen Werte
-
+  U4();
+  warten(1000);
   CubeDefinitionString.setCharAt(5, KanteScan(SamplesKante));        //Austauschen der Platzhalter an den richtigen Stellen im String gegen die eingescannten Werte
   warten(1000);                                           //Kurzer Delay, um Multiplexer und Farbsensor Zeit zu geben
   CubeDefinitionString.setCharAt(0, EckeScan(SamplesEcke));         //Das Austauschen und das Drehen erfolgt nach einer vorher festgelegten Sequenz und Prositionen
@@ -805,7 +848,7 @@ String Loesen(String CubeSolveString)
 {
 
 
-  String Speicherstrg[60];
+  String Speicherstrg[30];
 
   int StringCount = 0;
 
@@ -969,7 +1012,7 @@ void loop ()
   start = RPiEmpfangen();
   warten(1000);
   if (start = "calib"){
-    Kalibrieren(&SamplesKante, &SamplesEcke);
+    Kalibrieren(SamplesKante, SamplesEcke);
   }
   start = "";
   Verdrehen();
@@ -981,6 +1024,7 @@ void loop ()
   Serial2.flush();
   Scan();
   String CubeString = RPiEmpfangen();
+  warten(1000);
   Loesen(CubeString);
 
   Serial.print("Ende des Loops erreicht");
