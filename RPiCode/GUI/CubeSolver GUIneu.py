@@ -1,6 +1,7 @@
 import PySimpleGUI as psg
 import serial
 import twophase.solver as sv
+import time as time
 
 
 
@@ -158,9 +159,7 @@ while True:
                 layout +=1
                 window[f'-COL{layout}-'].update(visible=True) 
     
-    if layout == 5:
-        ser.reset_input_buffer()
-        ser.reset_output_buffer()        
+    if layout == 5:       
         while (ser.in_waiting == 0):
             i=0
         window['Ende'].update("Feddig")
