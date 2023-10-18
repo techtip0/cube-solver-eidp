@@ -150,7 +150,7 @@ while True:
             break
         if event == "Lösen!":
             solutiontemp = sv.solve(ScanErgebnis,19,2)
-            solution = solutiontemp + '\n'
+            solution = solutiontemp + 'P'
             print(solution)
             ser.write(solution.encode())
             window[f'-COL{layout}-'].update(visible=False)

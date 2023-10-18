@@ -809,7 +809,7 @@ String RPiEmpfangen(){
 
 String RPiEmpfangenLine(){
   while (Serial2.available() == 0){}
-  String received = Serial2.readStringUntil('\n');
+  String received = Serial2.readStringUntil('P');
   warten(1000);
   received.trim();
   return received;
