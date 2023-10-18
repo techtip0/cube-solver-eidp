@@ -350,7 +350,7 @@ char EckeScan(uint16_t SamplesEcke[][5])
   {
     colourDistance = getColourDistance(redSensor, greenSensor, blueSensor, SamplesEcke[i][0], SamplesEcke[i][1], SamplesEcke[i][2]);
 
-    if (colourDistance < 110)
+    if (colourDistance < 105)
     {
       Farbe = SamplesEcke[i][4];
       switch(Farbe){
@@ -399,7 +399,7 @@ char KanteScan(uint16_t SamplesKante[][5])
   {
     colourDistance = getColourDistance(redSensor, greenSensor, blueSensor, SamplesKante[i][0], SamplesKante[i][1], SamplesKante[i][2]);
 
-    if (colourDistance < 110)
+    if (colourDistance < 105)
     {
       Farbe = SamplesKante[i][4];
       switch(Farbe){
@@ -810,6 +810,7 @@ String RPiEmpfangen(){
 String RPiEmpfangenLine(){
   while (Serial2.available() == 0){}
   String received = Serial2.readStringUntil('\n');
+  warten(1000);
   received.trim();
   return received;
 }
@@ -992,6 +993,7 @@ void setup() {
   //Serielle und I2C Verbindung öffnen
   Serial.begin(9600);
   Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2);
+  Serial2.setRxBufferSize(1024);
   Wire.begin();
 
 	// Festsetzen der Maximalgeschwinigkeit und Beschleunigungsfaktoren der Motoren
