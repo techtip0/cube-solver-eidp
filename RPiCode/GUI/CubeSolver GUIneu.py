@@ -7,7 +7,7 @@ import twophase.solver as sv
 t=1
 
 #Serielle Verbindung öffnen
-ser = serial.Serial(port="/dev/ttyAMA0", baudrate=9600, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE, bytesize=serial.EIGHTBITS, writeTimeout=0)
+ser = serial.Serial(port="/dev/ttyAMA0", baudrate=9600, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE, bytesize=serial.EIGHTBITS, timeout=5)
 
 psg.theme('Dark Grey 15')
 ergebnis = ''
