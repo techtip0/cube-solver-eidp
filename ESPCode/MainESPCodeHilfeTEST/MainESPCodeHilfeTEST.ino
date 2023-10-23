@@ -350,7 +350,7 @@ char EckeScan(uint16_t SamplesEcke[][5])
   {
     colourDistance = getColourDistance(redSensor, greenSensor, blueSensor, SamplesEcke[i][0], SamplesEcke[i][1], SamplesEcke[i][2]);
 
-    if (colourDistance < 105)
+    if (colourDistance < 135)
     {
       Farbe = SamplesEcke[i][4];
       switch(Farbe){
@@ -399,7 +399,7 @@ char KanteScan(uint16_t SamplesKante[][5])
   {
     colourDistance = getColourDistance(redSensor, greenSensor, blueSensor, SamplesKante[i][0], SamplesKante[i][1], SamplesKante[i][2]);
 
-    if (colourDistance < 105)
+    if (colourDistance < 135)
     {
       Farbe = SamplesKante[i][4];
       switch(Farbe){
@@ -730,15 +730,15 @@ void D1() {
 }
 
 void U1() {
-  gelb.move(800);
+  gelb.move(-800);
   gelb.runToPosition();
 }
 void U2() {
-  gelb.move(1600);
+  gelb.move(-1600);
   gelb.runToPosition();
 }
 void U3() {
-  gelb.move(-800);
+  gelb.move(800);
   gelb.runToPosition();
 }
 void U4() {
