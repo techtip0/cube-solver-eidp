@@ -17,9 +17,9 @@ ScanErgebnis = 'Scannen...'
 #Layouts erstellen für die GUI
 
 layout1 = [
-    [psg.Text("        ", size=20), psg.Text("EidP Cube Solver", expand_x=True, size=30, justification='c', font=('Arial Bold', 20)), psg.Button("i", font= 'courier')],
-    [psg.Text("        ", size=20), psg.Text("Kalibrieren stark empfohlen. Kann übersprungen werden.", expand_x=True, size= 25, justification='c',font=('Arial', 10))],
-    [psg.Text("        ", size=20), psg.Button("Kalibrieren", size= 20, key ='calib'), psg.Text("               ", size=20), psg.Button("Überspringen", size=20, key='skip')]
+    [psg.Text("    ", size=20), psg.Text("EidP Cube Solver", expand_x=True, size=30, justification='c', font=('Arial Bold', 20)), psg.Button("i", font= 'courier')],
+    [psg.Text("    ", size=20), psg.Text("Kalibrieren stark empfohlen. Kann übersprungen werden.", expand_x=True, size= 25, justification='c',font=('Arial', 10))],
+    [psg.Text("    ", size=20), psg.Button("Kalibrieren", size= 20, key ='calib'), psg.Text("               ", size=20), psg.Button("Überspringen", size=20, key='skip')]
     ]
 
 
