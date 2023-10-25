@@ -47,7 +47,7 @@ layout5 = [[psg.Text("Lösen...")],
 #layouts zusammenfügen
 layout = [[psg.Column(layout1, key='-COL1-'), psg.Column(layout2, visible=False, key='-COL2-'), psg.Column(layout3, visible=False, key ='-COL3-'), psg.Column(layout4, visible=False, key ='-COL4-'), psg.Column(layout5, visible=False, key ='-COL5-')]]
 #GUI Fenster initialisieren
-window = psg.Window('Cube Solver EidP v1', layout, size=(715,150), icon=r'Rubiks_cube.ico')
+window = psg.Window('Cube Solver EidP v1', layout, size=(700,150), icon=r'Rubiks_cube.ico')
 #GUI Schleife für Aktionen
 
 layout = 1
