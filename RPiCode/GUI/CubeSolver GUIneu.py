@@ -17,7 +17,7 @@ ScanErgebnis = 'Scannen...'
 #Layouts erstellen für die GUI
 
 layout1 = [
-    [psg.Text("EidP CubeSolver", expand_x=True, size=30, justification='c', font=('Arial Bold', 20)), psg.Button("i", font= 'courier')],
+    [psg.Text("EidP Cube Solver", expand_x=True, size=30, justification='c', font=('Arial Bold', 20)), psg.Button("i", font= 'courier')],
     [psg.Text("Kalibrieren stark empfohlen. Kann übersprungen werden.", expand_x=True, size= 25, justification='c',font=('Arial', 10))],
     [psg.Button("Kalibrieren", size= 20, key ='calib'), psg.Text("               ", size=20), psg.Button("Überspringen", size=20, key='skip')]
     ]
@@ -31,23 +31,24 @@ layout2 = [
 ]
 
 
-layout3 = [[psg.Text(text='Verdrehung beendet. Scannen starten:',font=('Arial Bold', 18),size=30,expand_x=True,justification='center')],
-           
-           [psg.Button("Go!")]
+layout3 = [[psg.Text(text="Verdrehung beendet.",font=('Arial Bold', 18),size=30,expand_x=True,justification='center')],
+           [psg.Button("Scan beginnen", key ='go')]
 ]
 
-layout4 = [[psg.Text(key = 'ScanBox', expand_x=True, size=30, justification= "left", background_color='black')],
-           [psg.Button("Lösen!")],
+layout4 = [
+            [psg.Text(text='Gescannter Würfel:',font=('Arial Bold', 18),size=30,expand_x=True,justification='center')],
+            [psg.Text(key = 'ScanBox', expand_x=True, size=30, font=('Arial Bold', 15), justification= "left", background_color='black')],
+            [psg.Button("Lösen!", size=30)],
            ]
 
-layout5 = [[psg.Text("Lösen...")],
-           [psg.Button("Ende", key='Ende')]
+layout5 = [[psg.Text("Lösen...", key='Endbox')],
+           [psg.Button("Programm beenden", key='Ende', size=30), psg.Button("Programm neu starten", key='nochmal', size=30) ]
            ]
 
 #layouts zusammenfügen
 layout = [[psg.Column(layout1, key='-COL1-'), psg.Column(layout2, visible=False, key='-COL2-'), psg.Column(layout3, visible=False, key ='-COL3-'), psg.Column(layout4, visible=False, key ='-COL4-'), psg.Column(layout5, visible=False, key ='-COL5-')]]
 #GUI Fenster initialisieren
-window = psg.Window('Cube Solver EidP v1', layout, size=(700,150), icon=r'Rubiks_cube.ico')
+window = psg.Window('Cube Solver EidP v1', layout, size=(600,150), icon=r'Rubiks_cube.ico')
 #GUI Schleife für Aktionen
 
 layout = 1
@@ -103,6 +104,7 @@ while True:
         
         if event == 'Start!':
             ser.write(ergebnis.encode())
+            time.sleep(2)
             while (ser.in_waiting == 0):      #Warten auf Bereit Signal des ESP32
                 #Schleife kann nicht leer sein
                 i = 0
@@ -113,10 +115,9 @@ while True:
                 layout += 1
                 window[f'-COL{layout}-'].update(visible=True)
     if layout == 3:
-        #event, values = window.read()
         if event == psg.WIN_CLOSED:
             break
-        if event == "Go!":
+        if event == "go":
             bereit = 'GO'
             ser.write(bereit.encode())      #ESP32 scannen lassen
             window[f'-COL{layout}-'].update(visible=False)
@@ -154,6 +155,7 @@ while True:
             solution = solutiontemp + 'P'
             print(solution)
             ser.write(solution.encode())
+            time.sleep(2)
             window[f'-COL{layout}-'].update(visible=False)
             if layout < 6:
                 layout +=1
@@ -162,13 +164,15 @@ while True:
     if layout == 5:       
         while (ser.in_waiting == 0):
             i=0
-        window['Ende'].update("Feddig")
+        window['Endbox'].update("Feddig")
+        if event == "nochmal":
+            window[f'-COL{layout}-'].update(visible=False)
+            layout = 1
+            window[f'-COL{layout}-'].update(visible=True) 
             
         if event == "Ende":
             break
         
-                              
-                    
                     
         
     if event in (None, 'Exit'):
