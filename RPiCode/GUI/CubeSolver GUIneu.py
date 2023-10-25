@@ -37,12 +37,13 @@ layout3 = [[psg.Text(text="Verdrehung beendet.",font=('Arial Bold', 18),size=30,
 
 layout4 = [
             [psg.Text(text='Gescannter Würfel:',font=('Arial Bold', 18),size=30,expand_x=True,justification='center')],
-            [psg.Text(key = 'ScanBox', expand_x=True, size=30, font=('Arial Bold', 15), justification= "left", background_color='black')],
+            [psg.Text(key = 'ScanBox', expand_x=True, size=40, font=('Arial Bold', 15), justification= "left", background_color='black')],
             [psg.Button("Lösen!", size=30)],
            ]
 
-layout5 = [[psg.Text("Lösen...", key='Endbox')],
-           [psg.Button("Programm beenden", key='Ende', size=30), psg.Button("Programm neu starten", key='nochmal', size=30) ]
+layout5 = [
+            [psg.Text(text="Lösen...",font=('Arial Bold', 18),size=30,expand_x=True,justification='center')],
+            [psg.Button("Programm beenden", key='Ende', size=30), psg.Text("           ", size= 30), psg.Button("Programm neu starten", key='nochmal', size=30) ]
            ]
 
 #layouts zusammenfügen
@@ -164,10 +165,11 @@ while True:
     if layout == 5:       
         while (ser.in_waiting == 0):
             i=0
-        window['Endbox'].update("Feddig")
+        window['Endbox'].update("Würfel ist gelöst!")
         if event == "nochmal":
             window[f'-COL{layout}-'].update(visible=False)
             layout = 1
+            t=1
             window[f'-COL{layout}-'].update(visible=True) 
             
         if event == "Ende":
