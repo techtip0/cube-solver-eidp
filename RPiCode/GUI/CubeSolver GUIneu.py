@@ -42,7 +42,7 @@ layout4 = [
            ]
 
 layout5 = [
-            [psg.Text(text="Lösen...",font=('Arial Bold', 18),size=30,expand_x=True,justification='center')],
+            [psg.Text(text="Lösen...",font=('Arial Bold', 18),size=30,expand_x=True,justification='center', key= "Endbox")],
             [psg.Button("Programm beenden", key='Ende', size=30), psg.Text("           ", size= 30), psg.Button("Programm neu starten", key='nochmal', size=30) ]
            ]
 
