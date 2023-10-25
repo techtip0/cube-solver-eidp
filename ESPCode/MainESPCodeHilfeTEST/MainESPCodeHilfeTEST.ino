@@ -350,7 +350,7 @@ char EckeScan(uint16_t SamplesEcke[][5])
   {
     colourDistance = getColourDistance(redSensor, greenSensor, blueSensor, SamplesEcke[i][0], SamplesEcke[i][1], SamplesEcke[i][2]);
 
-    if (colourDistance < 135)
+    if (colourDistance < 150)
     {
       Farbe = SamplesEcke[i][4];
       switch(Farbe){
@@ -399,7 +399,7 @@ char KanteScan(uint16_t SamplesKante[][5])
   {
     colourDistance = getColourDistance(redSensor, greenSensor, blueSensor, SamplesKante[i][0], SamplesKante[i][1], SamplesKante[i][2]);
 
-    if (colourDistance < 135)
+    if (colourDistance < 150)
     {
       Farbe = SamplesKante[i][4];
       switch(Farbe){
@@ -441,7 +441,8 @@ void Scan()
 
   String CubeDefinitionString = "XXXXUXXXXXXXXRXXXXXXXXFXXXXXXXXDXXXXXXXXLXXXXXXXXBXXXX";   //Erstellen eines Cube Strings im Richtigen Format; dieser wird als Input für den Lösealgorythmus genutzt
                                                                                             //X als Platzhalter für eingelsenen Werte
-  U4();
+  U3();
+  U1();
   warten(1000);
   CubeDefinitionString.setCharAt(5, KanteScan(SamplesKante));        //Austauschen der Platzhalter an den richtigen Stellen im String gegen die eingescannten Werte
   warten(1000);                                           //Kurzer Delay, um Multiplexer und Farbsensor Zeit zu geben
@@ -471,7 +472,8 @@ void Scan()
   U1();
   R1();
   L3();
-  U4();
+  U3();
+  U1();
   warten(1000);
 
   CubeDefinitionString.setCharAt(23, KanteScan(SamplesKante));
@@ -491,7 +493,8 @@ void Scan()
   F1();
   R1();
   L3();
-  U4();
+  U3();
+  U1();
   warten(1000);
 
   CubeDefinitionString.setCharAt(19, KanteScan(SamplesKante));
@@ -511,7 +514,8 @@ void Scan()
   F3();
   R2();
   L2();
-  U4();
+  U3();
+  U1();
   warten(1000);
 
   CubeDefinitionString.setCharAt(32, KanteScan(SamplesKante));
@@ -531,7 +535,8 @@ void Scan()
   D1();
   R2();
   L2();
-  U4();
+  U3();
+  U1();
   warten(1000);
 
   CubeDefinitionString.setCharAt(28, KanteScan(SamplesKante));
@@ -551,7 +556,8 @@ void Scan()
   D3();
   R3();
   L1();
-  U4();
+  U3();
+  U1();
   warten(1000);
 
   CubeDefinitionString.setCharAt(48, KanteScan(SamplesKante));
@@ -571,7 +577,8 @@ void Scan()
   Bone();
   R3();
   L1();
-  U4();
+  U3();
+  U1();
   warten(1000);
 
   CubeDefinitionString.setCharAt(52, KanteScan(SamplesKante));
