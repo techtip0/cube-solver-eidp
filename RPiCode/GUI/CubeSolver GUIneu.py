@@ -18,8 +18,8 @@ ScanErgebnis = 'Scannen...'
 
 layout1 = [
     [psg.Text("EidP CubeSolver", expand_x=True, size=30, justification='c', font=('Arial Bold', 20)), psg.Button("i", font= 'courier')],
-    [psg.Text("Bei erster Benutzung in neuer Umgebung bitte Farbsensoren kalibrieren", expand_x=True, size= 25, justification='c',font=('Arial', 10))],
-    [psg.Button("Kalibrieren", size= 20, key ='calib'), psg.Button("Überspringen", size =20, key='skip')]
+    [psg.Text("Kalibrieren stark empfohlen. Kann übersprungen werden.", expand_x=True, size= 25, justification='c',font=('Arial', 10))],
+    [psg.Button("Kalibrieren", size= 20, key ='calib'), psg.Text("            ", size=20), psg.Button("Überspringen", size=15, key='skip')]
     ]
 
 
