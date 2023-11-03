@@ -104,6 +104,8 @@ while True:
         
         if event == 'Start!':
             ser.write(ergebnis.encode())
+            time.sleep(2)
+            ser.reset_input_buffer()
             while (ser.in_waiting == 0):      #Warten auf Bereit Signal des ESP32
                 pass
             
@@ -135,6 +137,7 @@ while True:
             temp = ser.readline()
             temp2 = temp.decode()
             ScanErgebnis = temp2.strip()
+            window['ScanBox'].update(ScanErgebnis)
             t = 2
             
             if ScanErgebnis.count('F') and ScanErgebnis.count('R') and ScanErgebnis.count('L') and ScanErgebnis.count('B') and ScanErgebnis.count('U') and ScanErgebnis.count('D') != 9:
