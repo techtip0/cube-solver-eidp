@@ -553,6 +553,53 @@ void Verdrehen()
 
 }
 
+
+void Zurueckdrehen()
+{
+  //string wird von Rasberry Pi empfangen
+
+
+  // Definiere String
+  String strVerdreh = RPiEmpfangen();
+
+  //String durchgehen und drehen
+  for(int i = 0; i <= strVerdreh.length(); i++){
+    if (strVerdreh[i] == 'D')
+    {
+      D3();
+    }
+
+    else if (strVerdreh[i] == 'U')
+    {
+      U3();
+    }
+
+    else if (strVerdreh[i] == 'L')
+    {
+      L3();
+    }
+
+    else if (strVerdreh[i] == 'B')
+    {
+      B3();
+    }
+
+    else if (strVerdreh[i] == 'F')
+    {
+      F3();
+    }
+
+    else if (strVerdreh[i] == 'R')
+    {
+      R3();
+    }  
+  }
+  strVerdreh = "";
+
+
+}
+
+
 void Scan()
 {
 
@@ -990,7 +1037,6 @@ void loop ()
   if (start == "calib"){
     Kalibrieren(SamplesKante, SamplesEcke);
   }
-  start = "";
   Verdrehen();
   String weiter = RPiEmpfangen();
   while (weiter != "GO"){
@@ -999,8 +1045,17 @@ void loop ()
   weiter = "";
   Serial2.flush();
   Scan();
-  String CubeString = RPiEmpfangenLine();
+  String scanPruefung = RPiEmpfangen();
   warten(1000);
-  Loesen(CubeString);
+  if (scanPruefung == "OK"){
+    String CubeString = RPiEmpfangenLine();
+    warten(1000);
+    Loesen(CubeString);
+  }
+  else if(scanPruefung == "NOK"){
+    Zurueckdrehen();
+  }
+
+
 
 };

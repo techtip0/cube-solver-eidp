@@ -1,7 +1,7 @@
 import PySimpleGUI as psg
 import serial
 import twophase.solver as sv
-import time as time
+import time
 
 
 
@@ -17,7 +17,7 @@ ScanErgebnis = 'Scannen...'
 #Layouts erstellen für die GUI
 
 layout1 = [
-    [psg.Text("    ", size=8), psg.Text("EidP Cube Solver", expand_x=True, size=30, justification='c', font=('Arial Bold', 20)), psg.Button("i", font= 'courier')],
+    [psg.Text("    ", size=8), psg.Text("EidP Cube Solver", expand_x=True, size=30, justification='c', font=('Arial Bold', 20)), psg.Button("i", font= 'courier',key="i1")],
     [psg.Text("    ", size=8), psg.Text("Kalibrieren stark empfohlen. Kann übersprungen werden.", expand_x=True, size= 25, justification='c',font=('Arial', 10))],
     [psg.Text("    ", size=8), psg.Button("Kalibrieren", size= 20, key ='calib'), psg.Text("               ", size=20), psg.Button("Überspringen", size=20, key='skip')]
     ]
@@ -25,7 +25,7 @@ layout1 = [
 
 
 layout2 = [
-    [psg.Button("Reset"),psg.Text(text='Zu auszuführende Verdrehung:',font=('Arial Bold', 18),size=30,expand_x=True,justification='center'), psg.Button("i", font= 'courier')],
+    [psg.Button("Reset"),psg.Text(text='Zu auszuführende Verdrehung:',font=('Arial Bold', 18),size=30,expand_x=True,justification='center'), psg.Button("i", font= 'courier', key="i2")],
     [psg.Text(key ='Ergebnis', expand_x=True,size=30, justification="left", font=('Arial Bold', 15),background_color='black')],
     [psg.Button("Vorne (F)",key ='F'), psg.Button("Links (L)", key='L'), psg.Button("Rechts (R)", key ='R'), psg.Button("Unten (D)", key='D'), psg.Button("Hinten (B)", key='B'), psg.Button("Oben (U)", key='U'), psg.Button("Start!",expand_x=True, expand_y=True)],
 ]
@@ -37,7 +37,7 @@ layout3 = [[psg.Text(text="Verdrehung beendet.",font=('Arial Bold', 18),size=30,
 
 layout4 = [
             [psg.Text(text='Gescannter Würfel:',font=('Arial Bold', 18),size=30,expand_x=True,justification='center')],
-            [psg.Text(key = 'ScanBox', expand_x=True, size=40, font=('Arial Bold', 15), justification= "left", background_color='black')],
+            [psg.Text(key = 'ScanBox', expand_x=True, size=40, font=('Arial Bold', 11), justification= "left", background_color='black')],
             [psg.Button("Lösen!", size=30)],
            ]
 
@@ -62,8 +62,7 @@ while True:
             calib = "calib"
             ser.write(calib.encode())
             while (ser.in_waiting == 0):      #Warten auf Bereit Signal des ESP32
-                #Schleife kann nicht leer sein
-                i = 0
+                pass
             
             #nächstes Layout laden und altes entfernen    
             window[f'-COL{layout}-'].update(visible=False)
@@ -78,7 +77,7 @@ while True:
                 layout += 1
                 window[f'-COL{layout}-'].update(visible=True)
         
-        if event == 'i':
+        if event == 'i1':
             psg.popup("Hier würden schlaue Erklärungen stehen\ntest", title="Hilfe", icon=r'information.ico')
     
     
@@ -97,7 +96,7 @@ while True:
         if event =="B":
             ergebnis = ergebnis + 'B'        
         
-        if event == 'i':
+        if event == 'i2':
             psg.popup("Hier würden schlaue Erklärungen stehen\ntest", title="Hilfe", icon=r'information.ico')
         
         if event == 'Reset':
@@ -105,10 +104,8 @@ while True:
         
         if event == 'Start!':
             ser.write(ergebnis.encode())
-            time.sleep(2)
             while (ser.in_waiting == 0):      #Warten auf Bereit Signal des ESP32
-                #Schleife kann nicht leer sein
-                i = 0
+                pass
             
             #nächstes Layout laden und altes entfernen    
             window[f'-COL{layout}-'].update(visible=False)
@@ -116,8 +113,6 @@ while True:
                 layout += 1
                 window[f'-COL{layout}-'].update(visible=True)
     if layout == 3:
-        if event == psg.WIN_CLOSED:
-            break
         if event == "go":
             bereit = 'GO'
             ser.write(bereit.encode())      #ESP32 scannen lassen
@@ -125,38 +120,42 @@ while True:
             if layout < 6:
                 layout += 1
                 window[f'-COL{layout}-'].update(visible=True)
-                #event, values = window.read()
+                window['ScanBox'].update(ScanErgebnis)
+                event, values = window.read()
 
-    if layout == 4:
-        #print("IN LAYOUT3 IF BEDINGUNG")
-        #event, values = window.read()
-        ser.reset_input_buffer()
-        ser.reset_output_buffer()
-        #print("NACH FLUSH")
-            
+
+    if layout == 4:      
+        
         if t == 1:
-            #print("IN IF BED ANFANG")
             while (ser.in_waiting == 0):
-                #print("ICH BIN IN SCHLEIFE LESEN")
-                i=0
-            #time.sleep(0.5)
+                pass
             temp = ser.readline()
             temp2 = temp.decode()
             ScanErgebnis = temp2.strip()
             t = 2
-            #ser.readline
-            #print(temp)
-            #print(ScanErgebnis)
-            #print("ENDE DER WAITING SCHLEIFE")
-        #print("NACH IF BEDINGUNG")
-        if event == psg.WIN_CLOSED:
-            break
+            
+            if ScanErgebnis.count('F') and ScanErgebnis.count('R') and ScanErgebnis.count('L') and ScanErgebnis.count('B') and ScanErgebnis.count('U') and ScanErgebnis.count('D') != 9:
+                psg.popup_error("SCANFEHLER!\n\nBitte Lichtverhältnisse und Motorenposition prüfen\n\nBeim drücken auf OK wird der Würfel automatisch zurück gedreht und das Programm neu gestartet")
+                Pruefung = "NOK"
+                ser.write(Pruefung.encode())
+                time.sleep(2)
+                ergebnisreverse = ergebnis[::-1]
+                ser.write(ergebnisreverse.encode())
+                window[f'-COL{layout}-'].update(visible=False)
+                layout = 1
+                t=1
+                ergebnis = ''
+                window[f'-COL{layout}-'].update(visible=True) 
+                
+            else:
+                Pruefung = "OK"
+                ser.write(Pruefung.encode())
+
         if event == "Lösen!":
             solutiontemp = sv.solve(ScanErgebnis,19,2)
             solution = solutiontemp + 'P'
             print(solution)
             ser.write(solution.encode())
-            time.sleep(2)
             window[f'-COL{layout}-'].update(visible=False)
             if layout < 6:
                 layout +=1
@@ -164,24 +163,23 @@ while True:
     
     if layout == 5:       
         while (ser.in_waiting == 0):
-            i=0
+            pass
         window['Endbox'].update("Würfel ist gelöst!")
         if event == "nochmal":
             window[f'-COL{layout}-'].update(visible=False)
             layout = 1
             t=1
+            ergebnis = ''
             window[f'-COL{layout}-'].update(visible=True) 
             
         if event == "Ende":
             break
         
-                    
         
     if event in (None, 'Exit'):
         break
     window['Ergebnis'].update(ergebnis)
     window['ScanBox'].update(ScanErgebnis)
-    
     
     
 window.close()
