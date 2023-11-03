@@ -37,7 +37,7 @@ layout3 = [[psg.Text(text="Verdrehung beendet.",font=('Arial Bold', 18),size=30,
 
 layout4 = [
             [psg.Text(text='Gescannter Würfel:',font=('Arial Bold', 18),size=30,expand_x=True,justification='center')],
-            [psg.Text(key = 'ScanBox', expand_x=True, size=40, font=('Arial Bold', 11), justification= "left", background_color='black')],
+            [psg.Text(key= "ScanBox", expand_x=True, size=40, font=('Arial Bold', 11), justification= "left", background_color='black')],
             [psg.Button("Lösen!", size=30)],
            ]
 
@@ -125,6 +125,9 @@ while True:
 
 
     if layout == 4:      
+        
+        ser.reset_input_buffer()
+        ser.reset_output_buffer()
         
         if t == 1:
             while (ser.in_waiting == 0):
