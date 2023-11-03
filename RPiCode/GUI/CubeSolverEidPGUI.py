@@ -123,7 +123,6 @@ while True:
                 layout += 1
                 window[f'-COL{layout}-'].update(visible=True)
                 window['ScanBox'].update(ScanErgebnis)
-                print("Nach button GO")
 
 
     if layout == 4:      
@@ -138,12 +137,10 @@ while True:
             temp2 = temp.decode()
             ScanErgebnis = temp2.strip()
             window['ScanBox'].update(ScanErgebnis)
-            print("nach event in 4")
             t = 2
             
-            if ScanErgebnis.count('F') and ScanErgebnis.count('R') and ScanErgebnis.count('L') and ScanErgebnis.count('B') and ScanErgebnis.count('U') and ScanErgebnis.count('D') != 9:
+            if ScanErgebnis.count('F') or ScanErgebnis.count('R') or ScanErgebnis.count('L') or ScanErgebnis.count('B') or ScanErgebnis.count('U') or ScanErgebnis.count('D') != 9:
                 
-                print("in fehler if")
                 
                 psg.popup_error("SCANFEHLER!\n\nBitte Lichtverhältnisse und Motorenposition prüfen\n\nBeim drücken auf OK wird der Würfel automatisch zurück gedreht und das Programm neu gestartet")
                 Pruefung = "NOK"
@@ -156,6 +153,9 @@ while True:
                 t=1
                 ergebnis = ''
                 window[f'-COL{layout}-'].update(visible=True) 
+                time.sleep(3)
+                ser.reset_input_buffer()
+                ser.reset_output_buffer()
                 
             else:
                 Pruefung = "OK"
@@ -181,6 +181,8 @@ while True:
             t=1
             ergebnis = ''
             window[f'-COL{layout}-'].update(visible=True) 
+            ser.reset_input_buffer()
+            ser.reset_input_buffer()
             
         if event == "Ende":
             break
