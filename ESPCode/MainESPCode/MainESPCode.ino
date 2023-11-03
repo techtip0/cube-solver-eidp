@@ -1,4 +1,4 @@
-//AccelStepper Library inculdieren
+//Bibliotheken einbinden
 #include <AccelStepper.h>
 #include <Wire.h>
 #include "Adafruit_TCS34725.h"
@@ -7,13 +7,12 @@
 //Pins für serielle Verbindung definieren
 #define RXD2 16 
 #define TXD2 17
-#define CONFIG_ESP_IPC_TASK_STACK_SIZE 2048
 
 //initialisierung beider Farbsensoren
 Adafruit_TCS34725 tcsKante = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_614MS, TCS34725_GAIN_1X);
 Adafruit_TCS34725 tcsEcke = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_614MS, TCS34725_GAIN_1X);
 
-// Defnieren der Motoren-Pinne
+//Definieren der Motoren-Pins
 
 const int gruendirPin = 14;
 const int gruenstepPin = 27;
@@ -37,7 +36,7 @@ const int gelbstepPin = 25;
 // Motor interface typ definieren
 #define motorInterfaceType 1
 
-// Motoren als Instancen erstellen
+// Motoren als Instanzen erstellen
 AccelStepper gruen(motorInterfaceType, gruenstepPin, gruendirPin);
 AccelStepper weiss(motorInterfaceType, weissstepPin, weissdirPin);
 AccelStepper rot(motorInterfaceType, rotstepPin, rotdirPin);
@@ -45,7 +44,7 @@ AccelStepper orange(motorInterfaceType, orangestepPin, orangedirPin);
 AccelStepper blau(motorInterfaceType, blaustepPin, blaudirPin);
 AccelStepper gelb(motorInterfaceType, gelbstepPin, gelbdirPin);
 
-// 90-Grad drehungen aller Seiten in beide Richungen als Funktionen definieren
+//90-Grad drehungen aller Seiten in beide Richungen als Funktionen definieren
 //D1 bedeutet einmal im Uhrzeigersinn, D2 zweimal
 //D3 einmal rückwärts
 void D3() {
@@ -71,10 +70,6 @@ void U2() {
 }
 void U3() {
   gelb.move(800);
-  gelb.runToPosition();
-}
-void U4() {
-  gelb.move(3200);
   gelb.runToPosition();
 }
 
@@ -132,21 +127,21 @@ void R1() {
 
 //Funktion zur Auswahl des Multiplexerkanals
 void PCA9548A(uint8_t bus){
-  Wire.beginTransmission(0x70);  // PCA9548A addresse ist 0x70
+  Wire.beginTransmission(0x70);  //I²C Verbindung starten. PCA9548A Addresse ist 0x70
   Wire.write(1 << bus);          //Byte senden zur Auswahl des Kanals
   Wire.endTransmission();
 }
 
 //Funktion zum warten via Millis(), da delay() ESP32 blockiert
 void warten(long intervall){
-  unsigned long currentMillis = millis();
-  unsigned long previousMillis = millis();
-  while(currentMillis - previousMillis < intervall){
+  unsigned long currentMillis = millis();   //Vergangene Millisekunden zum Zeitpunkt des Aufrufens der Funktion
+  unsigned long previousMillis = millis();  
+  while(currentMillis - previousMillis < intervall){    //Prüfen, ob übergebenes Intervall abgelaufen ist
     currentMillis = millis();
   }
 }
 
-
+//2Dimensionale Arrays, in denen die Vergleichswerte beim Kalibrieren gespeichert werden. Jeweils einen für jeden Sensor
 uint16_t SamplesKante[6][5] = {
   { 0,  0,  0,  0,  1},
   { 0,  0,  0,  0,  2},
@@ -165,15 +160,16 @@ uint16_t SamplesEcke[6][5] = {
   { 0,  0,  0,  0,  6},
 };
 
+//Funktion nimmt sich jeweils 2 Werte einer Farbe pro Sensor und speichert diese Werte in die Arrays zum Vergleichen. 
 void Kalibrieren(uint16_t (&SamplesKante)[6][5], uint16_t (&SamplesEcke)[6][5]) 
 {
 
   U2();
-  warten(1000);
+  warten(1000);                                   //Wartefunktionen geben den Sensoren Zeit, dass der Würfel gut verdreht ist und noch nicht wieder dreht, wenn gescannt wird
   static uint16_t KR1, KG1, KB1, KC1;
 
-  PCA9548A(0);
-  tcsKante.getRawData(&KR1, &KG1, &KB1, &KC1);
+  PCA9548A(0);                                    //Korrespondierender Kanal zum Sensor muss ausgewählt werden
+  tcsKante.getRawData(&KR1, &KG1, &KB1, &KC1);    //Funktion gibt die Werte des Sensors an die uint16_t
 
   warten(1000);
   static uint16_t ER1, EG1, EB1, EC1;
@@ -192,7 +188,7 @@ void Kalibrieren(uint16_t (&SamplesKante)[6][5], uint16_t (&SamplesEcke)[6][5])
   PCA9548A(1);
   tcsEcke.getRawData(&ER2, &EG2, &EB2, &EC2);
 
-  SamplesKante[0][0]= (KR1 + KR2) / 2;
+  SamplesKante[0][0]= (KR1 + KR2) / 2;    //Eingabe in Array über arithmetisches Mittel der 2 Farben 
   SamplesKante[0][1]= (KG1 + KG2) / 2;
   SamplesKante[0][2]= (KB1 + KB2) / 2;
   SamplesKante[0][3]= (KC1 + KC2) / 2;
@@ -403,22 +399,21 @@ void Kalibrieren(uint16_t (&SamplesKante)[6][5], uint16_t (&SamplesEcke)[6][5])
   warten(1000);
 
 
-  Serial2.print("feddisch");
+  Serial2.print("feddisch");  //Signalisiert dem RPi, dass Kalibrierung fertig ist
 
 }
 
 
 
-
+//Funktion berechnet den Abstand des gemessenen RGB-Wertes mit der Euklidischen Vektornorm
 int getColourDistance(int redSensor, int greenSensor, int blueSensor, int redSample, int greenSample, int blueSample)
 {
-  // Calculates the Euclidean distance between two RGB colours
-  // https://en.wikipedia.org/wiki/Color_difference
   return sqrt(pow(redSensor - redSample, 2) + pow(greenSensor - greenSample, 2) + pow(blueSensor - blueSample, 2));
 }
 
 
-char EckeScan(uint16_t SamplesEcke[][5])
+//Wenn diese Funktion aufgerufen wird, scannt der Farbsensor die momentanen RGB-Werte. Diese werden Verglichen mit den Werten aus der Kalibrierung
+char EckeScan(uint16_t SamplesEcke[][5])  //Übergabe der Vergleichswerte
 {
 
   char ErgebnisEcke;
@@ -426,14 +421,14 @@ char EckeScan(uint16_t SamplesEcke[][5])
   int colourDistance;
   int Farbe;
   PCA9548A(1);
-  tcsEcke.getRawData(&redSensor, &greenSensor, &blueSensor, &clearSensor);
+  tcsEcke.getRawData(&redSensor, &greenSensor, &blueSensor, &clearSensor);  //Scannt momentane RGB-Werte
 
-  // Iterate through the array to find a matching colour sample
+  // Durch den Array iterieren, um die passende Farbe zu finden.
   for (int i = 0; i < 6; i++)
   {
-    colourDistance = getColourDistance(redSensor, greenSensor, blueSensor, SamplesEcke[i][0], SamplesEcke[i][1], SamplesEcke[i][2]);
+    colourDistance = getColourDistance(redSensor, greenSensor, blueSensor, SamplesEcke[i][0], SamplesEcke[i][1], SamplesEcke[i][2]);  //Berechnet den Abstand zum gerade ausgewählten Vergleichswert des Arrays
 
-    if (colourDistance < 150)
+    if (colourDistance < 150)   //Intervalle können angepasst werden, um zuverlässige Ergebnisse zu erzielen
     {
       Farbe = SamplesEcke[i][4];
       switch(Farbe){
@@ -459,7 +454,7 @@ char EckeScan(uint16_t SamplesEcke[][5])
       return ErgebnisEcke;
     }
   }
-  return 'X';
+  return 'X'; //Bei keiner gefundenen Farbe wird ein "X" als Fehler zurückgegeben
 }
 
 char KanteScan(uint16_t SamplesKante[][5])
@@ -470,7 +465,6 @@ char KanteScan(uint16_t SamplesKante[][5])
   int Farbe;
   PCA9548A(0);
   tcsKante.getRawData(&redSensor, &greenSensor, &blueSensor, &clearSensor);
-  // Iterate through the array to find a matching colour sample
   for (int i = 0; i < 6; i++)
   {
     colourDistance = getColourDistance(redSensor, greenSensor, blueSensor, SamplesKante[i][0], SamplesKante[i][1], SamplesKante[i][2]);
@@ -504,16 +498,13 @@ char KanteScan(uint16_t SamplesKante[][5])
   return 'X';
 }
 
-
+//Funktion empfängt den zu verdrehenden String und führt diese Sequenz aus
 void Verdrehen()
 {
-  //string wird von Rasberry Pi empfangen
+ 
+  String strVerdreh = RPiEmpfangen(); //Zu verdrehender String wird Empfangen und zum ausführen gespeichertz
 
-
-  // Definiere String
-  String strVerdreh = RPiEmpfangen();
-
-  //String durchgehen und drehen
+  //String wird nach einzelnen Charakteren durchlaufen. Zugehörige Verdrehung wird ausgeführt
   for(int i = 0; i <= strVerdreh.length(); i++){
     if (strVerdreh[i] == 'D')
     {
@@ -545,24 +536,20 @@ void Verdrehen()
       R1();
     }  
   }
-  strVerdreh = "";
 
   Serial2.print('Fertig');
   warten(1000);
-  Serial2.flush();
+  Serial2.flush();        //Stellt zuverlässige serielle Übertragung da, durch löschen des Buffers
 
 }
 
-
+//Analog zur Verdrehen Funktion, anstelle z.B: bei "D" D1, wird ein D3 verwendet, um die Verdrehung Rückgängig zu machen
+//String wurde bereits am RPi umgedreht
 void Zurueckdrehen()
 {
-  //string wird von Rasberry Pi empfangen
 
-
-  // Definiere String
   String strVerdreh = RPiEmpfangen();
 
-  //String durchgehen und drehen
   for(int i = 0; i <= strVerdreh.length(); i++){
     if (strVerdreh[i] == 'D')
     {
@@ -594,25 +581,25 @@ void Zurueckdrehen()
       R3();
     }  
   }
-  strVerdreh = "";
 
 
 }
 
 
+//Funktion scannt über eine festgelegte Sequenz den Würfel über die Sensoren ab. Speichert diese Ergebnisse in den CubeDefinitionString
 void Scan()
 {
 
   String CubeDefinitionString = "XXXXUXXXXXXXXRXXXXXXXXFXXXXXXXXDXXXXXXXXLXXXXXXXXBXXXX";   //Erstellen eines Cube Strings im Richtigen Format; dieser wird als Input für den Lösealgorythmus genutzt
                                                                                             //X als Platzhalter für eingelsenen Werte
-  U3();
+  U3(); 	    //U3-U1 wird benutzt um ein zuverlässiges Scanergebnis zu erzielen. Die obere Fläche wird "platt gedreht"
   U1();
   warten(1000);
-  CubeDefinitionString.setCharAt(5, KanteScan(SamplesKante));        //Austauschen der Platzhalter an den richtigen Stellen im String gegen die eingescannten Werte
-  warten(1000);                                           //Kurzer Delay, um Multiplexer und Farbsensor Zeit zu geben
-  CubeDefinitionString.setCharAt(0, EckeScan(SamplesEcke));         //Das Austauschen und das Drehen erfolgt nach einer vorher festgelegten Sequenz und Prositionen
+  CubeDefinitionString.setCharAt(5, KanteScan(SamplesKante));         //Austauschen der Platzhalter an den richtigen Stellen im String gegen die eingescannten Werte
+  warten(1000);                                                       //Kurzer Delay, um Multiplexer und Farbsensor Zeit zu geben
+  CubeDefinitionString.setCharAt(0, EckeScan(SamplesEcke));           //Das Austauschen und das Drehen erfolgt nach einer vorher festgelegten Sequenz und Prositionen
 
-  U1();                                                 //Drehen des Würfels damit alle Sticker eingescannt werden
+  U1();                                                               //Drehen des Würfels damit alle Sticker eingescannt werden
   warten(1000);
 
   CubeDefinitionString.setCharAt(1, KanteScan(SamplesKante));
@@ -840,23 +827,24 @@ void Scan()
   F1();
   B3();
   R3();
-  CubeDefinitionString = CubeDefinitionString + "\n";
+  CubeDefinitionString = CubeDefinitionString + "\n";   //\n wird als Signal dass der String vorbei ist benutzt
   
-  Serial2.print(CubeDefinitionString);
+  Serial2.print(CubeDefinitionString);      //Überträgt den String an den RPi zum lösen
 
 }
 
 
 
-
+//Funktionen zum Empfangen von Daten des RPi
 String RPiEmpfangen(){
-  while (Serial2.available() == 0){}
+  while (Serial2.available() == 0){}    //Prüft, ob Daten vorhanden sind. Bleibt bis dahin in der Schleife
   warten(1000);
-  String received = Serial2.readString();
-  received.trim();
+  String received = Serial2.readString(); //Liest eingehende serielle Daten
+  received.trim();  //kürzt Signale wie \n aus dem String
   return received;
 }
 
+//Funktioniert analog, wartet nur auf ein "P" als Signal, dass der String vorbei ist
 String RPiEmpfangenLine(){
   while (Serial2.available() == 0){}
   String received = Serial2.readStringUntil('P');
@@ -867,30 +855,32 @@ String RPiEmpfangenLine(){
 
 
 
-
+//Funktion löst den Würfel auf Basis der empfangenen Lösung des RPi
 void Loesen(String CubeSolveString) 
 {
 
 
-  String Speicherstrg[30];
+  String Speicherstrg[30];  //Größe gewählt, um immer über Länge der Lösung zu liegen
 
   int StringCount = 0;
 
-  //Aufteilen den CubeSolveStrings in substrings
+  //Aufteilen den CubeSolveStrings in substrings, um die einzelnen Lösungsschritte abfragen zu können
   while (CubeSolveString.length() > 0)
     {
       int index = CubeSolveString.indexOf(' ');
-      if (index == -1)  // Keine Leertaste gefunden
+      if (index == -1)  // Kein Leerzeichen gefunden, Ende des Teilens
       {
         Speicherstrg[StringCount++] = CubeSolveString;
         break;
       }
       else
       {
+        //Speichert die Teile als Substring
         Speicherstrg[StringCount++] = CubeSolveString.substring(0, index);
         CubeSolveString = CubeSolveString.substring(index+1);
       }
     }
+    //Schleife geht den geteilten Speicherstrg durch und führt die Lösung aus
     for (int i = 0; i <= StringCount; i++)
   {
 
@@ -987,16 +977,15 @@ void Loesen(String CubeSolveString)
   Serial2.println("Fertig gelöst!");
 }
 
-
+//setup Code wird einmalig durchgeführt beim Programmstart
 void setup() {
 
   //Serielle und I2C Verbindung öffnen
   Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2);
-  Serial2.setRxBufferSize(1024);
+  Serial2.setRxBufferSize(1024);  //Buffer vergrößert, um Probleme mit langen Strings zu vermeiden
   Wire.begin();
 
 	// Festsetzen der Maximalgeschwinigkeit und Beschleunigungsfaktoren der Motoren
-	// initial speed and the target position
 	gruen.setMaxSpeed(20000);
 	gruen.setAcceleration(10000);
 	gruen.setSpeed(10000);
@@ -1028,31 +1017,29 @@ void setup() {
 }
 
 
-
+//Schleife wird durchgehend durchlaufen
 void loop ()
 {
-  String start = "";
-  start = RPiEmpfangen();
+  start = RPiEmpfangen(); //wartet auf Startsignal des Benutzers am RPi
   warten(1000);
-  if (start == "calib"){
+  if (start == "calib"){                    //Beim Empfangen des calib Signals wird kalibriert
     Kalibrieren(SamplesKante, SamplesEcke);
   }
-  Verdrehen();
-  String weiter = RPiEmpfangen();
+  Verdrehen();                              
+  String weiter = RPiEmpfangen();           //Wartet auf weitersignal des Benutzers am RPi
   while (weiter != "GO"){
     weiter = RPiEmpfangen();
   }
-  weiter = "";
-  Serial2.flush();
+  Serial2.flush();                          //Flush um zuverlässige serielle Verbindung zu gewährleisten
   Scan();
-  String scanPruefung = RPiEmpfangen();
+  String scanPruefung = RPiEmpfangen();     //Erhält das Signal, ob der gescannte Würfel lösbar ist und fortgeführt werden kann
   warten(1000);
-  if (scanPruefung == "OK"){
-    String CubeString = RPiEmpfangenLine();
+  if (scanPruefung == "OK"){                //OK -- führt mit Lösung fort
+    String CubeSolveString = RPiEmpfangenLine();
     warten(1000);
-    Loesen(CubeString);
+    Loesen(CubeSolveString);
   }
-  else if(scanPruefung == "NOK"){
+  else if(scanPruefung == "NOK"){           //Nicht OK -- Dreht die Verdrehung zurück
     Zurueckdrehen();
   }
 
