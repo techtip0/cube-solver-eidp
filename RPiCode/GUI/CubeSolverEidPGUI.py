@@ -123,7 +123,6 @@ while True:
                 layout += 1
                 window[f'-COL{layout}-'].update(visible=True)
                 window['ScanBox'].update(ScanErgebnis)
-                event, values = window.read()
                 print("Nach button GO")
 
 
@@ -139,7 +138,6 @@ while True:
             temp2 = temp.decode()
             ScanErgebnis = temp2.strip()
             window['ScanBox'].update(ScanErgebnis)
-            event, values = window.read()
             print("nach event in 4")
             t = 2
             

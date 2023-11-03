@@ -169,8 +169,6 @@ void Kalibrieren(uint16_t (&SamplesKante)[6][5], uint16_t (&SamplesEcke)[6][5])
 {
 
   U2();
-  U3();
-  U1();
   warten(1000);
   static uint16_t KR1, KG1, KB1, KC1;
 
@@ -221,8 +219,6 @@ void Kalibrieren(uint16_t (&SamplesKante)[6][5], uint16_t (&SamplesEcke)[6][5])
 
 
   U2();
-  U3();
-  U1();
 
 
   PCA9548A(0);
@@ -261,8 +257,6 @@ void Kalibrieren(uint16_t (&SamplesKante)[6][5], uint16_t (&SamplesEcke)[6][5])
   tcsEcke.getRawData(&ER1, &EG1, &EB1, &EC1);
 
   U2();
-  U3();
-  U1();
   warten(1000);
 
 
@@ -289,8 +283,6 @@ void Kalibrieren(uint16_t (&SamplesKante)[6][5], uint16_t (&SamplesEcke)[6][5])
   R1();
   L3();
   U2();
-  U3();
-  U1();
   warten(1000);
 
 
@@ -304,8 +296,6 @@ void Kalibrieren(uint16_t (&SamplesKante)[6][5], uint16_t (&SamplesEcke)[6][5])
   tcsEcke.getRawData(&ER1, &EG1, &EB1, &EC1);
 
   U2();
-  U3();
-  U1();
   warten(1000);
 
 
@@ -331,8 +321,6 @@ void Kalibrieren(uint16_t (&SamplesKante)[6][5], uint16_t (&SamplesEcke)[6][5])
   L2();
   R2();
   U2();
-  U3();
-  U1();
   warten(1000);
 
 
@@ -346,8 +334,6 @@ void Kalibrieren(uint16_t (&SamplesKante)[6][5], uint16_t (&SamplesEcke)[6][5])
   tcsEcke.getRawData(&ER1, &EG1, &EB1, &EC1);
 
   U2();
-  U3();
-  U3();
   warten(1000);
 
 
@@ -373,8 +359,6 @@ void Kalibrieren(uint16_t (&SamplesKante)[6][5], uint16_t (&SamplesEcke)[6][5])
   R3();
   L1();
   U2();
-  U3();
-  U1();
   warten(1000);
 
 
@@ -388,8 +372,6 @@ void Kalibrieren(uint16_t (&SamplesKante)[6][5], uint16_t (&SamplesEcke)[6][5])
   tcsEcke.getRawData(&ER1, &EG1, &EB1, &EC1);
 
   U2();
-  U3();
-  U1();
   warten(1000);
 
 
