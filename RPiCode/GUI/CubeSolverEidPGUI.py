@@ -137,6 +137,7 @@ while True:
             temp2 = temp.decode()
             ScanErgebnis = temp2.strip()
             window['ScanBox'].update(ScanErgebnis)
+            print(ScanErgebnis)
             t = 2
             
             if ScanErgebnis.count('F') or ScanErgebnis.count('R') or ScanErgebnis.count('L') or ScanErgebnis.count('B') or ScanErgebnis.count('U') or ScanErgebnis.count('D') != 9:

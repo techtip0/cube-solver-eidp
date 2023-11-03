@@ -1020,7 +1020,7 @@ void setup() {
 //Schleife wird durchgehend durchlaufen
 void loop ()
 {
-  start = RPiEmpfangen(); //wartet auf Startsignal des Benutzers am RPi
+  String start = RPiEmpfangen(); //wartet auf Startsignal des Benutzers am RPi
   warten(1000);
   if (start == "calib"){                    //Beim Empfangen des calib Signals wird kalibriert
     Kalibrieren(SamplesKante, SamplesEcke);
