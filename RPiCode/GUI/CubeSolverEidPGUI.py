@@ -143,7 +143,7 @@ while True:
             
             #Prüfen, ob alle Seiten neun mal im Scan vertreten sind. Theoretisch kann auch der Fehler aufkommen, dass Seiten so vertauscht werden, dass sie trotzdem 9 bleiben.
             #Dieser Fehler ist in den zahlreichen Tests aber nie aufgetreten.
-            if (ScanErgebnis.count('F') or ScanErgebnis.count('R') or ScanErgebnis.count('L') or ScanErgebnis.count('B') or ScanErgebnis.count('U') or ScanErgebnis.count('D')) != 9:   
+            if ScanErgebnis.count('F') !=9 or ScanErgebnis.count('R') !=9 or ScanErgebnis.count('L') !=9 or ScanErgebnis.count('B') !=9 or ScanErgebnis.count('U') !=9 or ScanErgebnis.count('D') != 9:   
                 #Error Popup agiert ähnlich zum normalen Popup, hat aber einen vorgefertigten Button
                 psg.popup_error("SCANFEHLER!\n\nBitte Lichtverhältnisse und Motorenposition prüfen\n\nBeim drücken auf Error wird der Würfel automatisch zurück gedreht und das Programm neu gestartet", title="Fehler!", icon=r'Error.png')
                 Pruefung = "NOK"
